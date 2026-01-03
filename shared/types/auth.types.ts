@@ -1,12 +1,11 @@
 export interface User {
-  id?: string;
   nameSurname: string;
   userName: string;
   email: string;
 }
 
 export interface LoginCredentials {
-  userName: string;
+  nameOrEmail: string;
   password: string;
 }
 
@@ -24,7 +23,7 @@ export interface TokenResponse {
   expiration: string;
 }
 
-export interface RegisterRespone {
+export interface RegisterResponse {
   success: boolean;
   message: string;
 }
