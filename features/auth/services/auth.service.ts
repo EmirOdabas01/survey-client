@@ -20,9 +20,9 @@ class AuthService {
         "/Auth/Login",
         credentials
       );
-
-      setAccessToken(response.accessToken, response.expiration);
-      setRefreshToken(response.refreshToken);
+      console.log(response.token.accessToken);
+      setAccessToken(response.token.accessToken, response.token.expiration);
+      setRefreshToken(response.token.refreshToken);
 
       return response;
     } catch (error) {
@@ -60,8 +60,8 @@ class AuthService {
         { refreshToken }
       );
 
-      setAccessToken(response.accessToken, response.expiration);
-      setRefreshToken(response.refreshToken);
+      setAccessToken(response.token.accessToken, response.token.expiration);
+      setRefreshToken(response.token.refreshToken);
 
       return response;
     } catch (error) {
@@ -72,7 +72,7 @@ class AuthService {
 
   async logout(): Promise<void> {
     try {
-      await apiClient.post("/auth/logout");
+      await apiClient.post("/Auth/Logout");
     } catch (error) {
       console.error("Logout API call failed:", error);
     } finally {
@@ -84,8 +84,7 @@ class AuthService {
     try {
       const token = getAccessToken();
       if (!token) return null;
-
-      const user = await apiClient.get<User>("/auth/me");
+      const user = await apiClient.request<User>("/Auth/Me");
       return user;
     } catch (error) {
       return null;

@@ -16,11 +16,14 @@ export interface RegisterCredentials {
   password: string;
   passwordConfirm: string;
 }
-
-export interface TokenResponse {
+export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
   expiration: string;
+}
+
+export interface TokenResponse {
+  token: AuthTokens;
 }
 
 export interface RegisterResponse {

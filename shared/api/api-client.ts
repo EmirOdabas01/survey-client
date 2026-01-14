@@ -26,7 +26,6 @@ class ApiClient {
 
   private async refreshAccessToken(): Promise<string> {
     const refreshToken = getRefreshToken();
-
     if (!refreshToken) {
       throw new Error("No refresh token available");
     }
@@ -45,10 +44,10 @@ class ApiClient {
       }
 
       const data: TokenResponse = await response.json();
-      setAccessToken(data.accessToken, data.expiration);
-      setRefreshToken(data.refreshToken);
+      setAccessToken(data.token.accessToken, data.token.expiration);
+      setRefreshToken(data.token.refreshToken);
 
-      return data.accessToken;
+      return data.token.accessToken;
     } catch (error) {
       deleteAuthTokens();
       window.location.href = "/login";

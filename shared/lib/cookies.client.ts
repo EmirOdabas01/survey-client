@@ -1,7 +1,8 @@
+// src/shared/lib/cookies.client.ts
 export const COOKIE_NAMES = {
   ACCESS_TOKEN: "access_token",
   REFRESH_TOKEN: "refresh_token",
-  TOKEN_EXPIRATION: "token_expration",
+  TOKEN_EXPIRATION: "token_expiration",
 } as const;
 
 const COOKIE_OPTIONS = {
@@ -27,8 +28,9 @@ export function setAccessToken(token: string, expiration: string) {
 }
 
 export function setRefreshToken(token: string) {
+  console.log(token);
+  console.log("-----------------------");
   const maxAge = 30 * 24 * 60 * 60;
-
   document.cookie = `${COOKIE_NAMES.REFRESH_TOKEN}=${token}; path=${
     COOKIE_OPTIONS.path
   }; max-age=${maxAge}; ${COOKIE_OPTIONS.secure ? "secure;" : ""} samesite=${
@@ -49,17 +51,15 @@ export function getRefreshToken(): string | null {
   const tokenCookie = cookies.find((c) =>
     c.trim().startsWith(`${COOKIE_NAMES.REFRESH_TOKEN}=`)
   );
-
   return tokenCookie ? tokenCookie.split("=")[1] : null;
 }
 
 export function getTokenExpiration(): string | null {
   const cookies = document.cookie.split(";");
-  const tokenCookie = cookies.find((c) =>
+  const expCookie = cookies.find((c) =>
     c.trim().startsWith(`${COOKIE_NAMES.TOKEN_EXPIRATION}=`)
   );
-
-  return tokenCookie ? tokenCookie.split("=")[1] : null;
+  return expCookie ? expCookie.split("=")[1] : null;
 }
 
 export function isTokenExpired(): boolean {
