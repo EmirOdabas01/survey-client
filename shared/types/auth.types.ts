@@ -1,7 +1,9 @@
-export interface User {
-  nameSurname: string;
-  userName: string;
-  email: string;
+export interface UserInfoResponse {
+  userInfo: {
+    nameSurname: string;
+    userName: string;
+    eMail: string;
+  };
 }
 
 export interface LoginCredentials {

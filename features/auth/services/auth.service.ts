@@ -10,8 +10,9 @@ import type {
   RegisterCredentials,
   TokenResponse,
   RegisterResponse,
-  User,
+  UserInfoResponse,
 } from "@/shared/types/auth.types";
+import { userInfo } from "os";
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<TokenResponse> {
@@ -80,12 +81,13 @@ class AuthService {
     }
   }
 
-  async getCurrentUser(): Promise<User | null> {
+  async getCurrentUser(): Promise<UserInfoResponse | null> {
     try {
       const token = getAccessToken();
       if (!token) return null;
-      const user = await apiClient.request<User>("/Auth/Me");
-      return user;
+      const userInfo = await apiClient.request<UserInfoResponse>("/Auth/Me");
+      console.log(`user: ${userInfo}`);
+      return userInfo;
     } catch (error) {
       return null;
     }

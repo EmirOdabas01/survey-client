@@ -10,13 +10,13 @@ import {
 import { useRouter } from "next/navigation";
 import { authService } from "../services/auth.service";
 import type {
-  User,
+  UserInfoResponse,
   LoginCredentials,
   RegisterCredentials,
 } from "@/shared/types/auth.types";
 
 interface AuthContextType {
-  user: User | null;
+  user: UserInfoResponse | null;
   loading: boolean;
   isAuthenticated: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
@@ -30,7 +30,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserInfoResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 

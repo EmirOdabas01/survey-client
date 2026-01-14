@@ -21,7 +21,9 @@ export default function DashboardLayout({
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-700">
-                  Welcome, {user?.userName || user?.nameSurname}
+                  Welcome, {user?.userInfo.userName}
+                  {user?.userInfo.nameSurname}
+                  {user?.userInfo.eMail}
                 </span>
                 <button
                   onClick={logout}
