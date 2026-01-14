@@ -28,8 +28,6 @@ export function setAccessToken(token: string, expiration: string) {
 }
 
 export function setRefreshToken(token: string) {
-  console.log(token);
-  console.log("-----------------------");
   const maxAge = 30 * 24 * 60 * 60;
   document.cookie = `${COOKIE_NAMES.REFRESH_TOKEN}=${token}; path=${
     COOKIE_OPTIONS.path

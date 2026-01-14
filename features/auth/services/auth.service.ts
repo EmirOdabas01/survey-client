@@ -72,7 +72,7 @@ class AuthService {
 
   async logout(): Promise<void> {
     try {
-      await apiClient.post("/Auth/Logout");
+      await apiClient.put("/Auth/Logout");
     } catch (error) {
       console.error("Logout API call failed:", error);
     } finally {
