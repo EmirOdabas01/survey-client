@@ -9,7 +9,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <div style={{ display: "flex" }}>
+            <div>login</div>
+            <div>Register</div>
+          </div>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
