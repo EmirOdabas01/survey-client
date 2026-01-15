@@ -1,0 +1,123 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { surveyService } from "../services/survey.service";
+import { SurveyCard } from "./survey-card";
+import type { Survey } from "@/shared/types/survey.types";
+import { apiClient } from "@/shared/api/api-client";
+
+interface SurveyListProps {
+  onSurveyClick?: (surveyId: string) => void;
+}
+
+export function SurveyList({ onSurveyClick }: SurveyListProps) {
+  const [surveys, setSurveys] = useState<Survey[]>([]);
+  const [loading, setLoding] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadSurveys();
+  }, []);
+
+  async function loadSurveys() {
+    setLoding(true);
+    setError(null);
+    try {
+      const response = await surveyService.getPublicSurveys();
+      setSurveys(response.surveys);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "failed to load surveys");
+    } finally {
+      setLoding(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading surveys...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="text-red-600 mb-4">
+            <svg
+              className="w-16 h-16 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <p className="text-gray-900 font-medium mb-2">
+            Failed to load surveys
+          </p>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={loadSurveys}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (surveys.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="text-gray-400 mb-4">
+            <svg
+              className="w-16 h-16 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <p className="text-gray-900 font-medium mb-2">No surveys available</p>
+          <p className="text-gray-600">Check back later for new surveys</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">Available Surveys</h2>
+        <p className="text-gray-600 mt-1">
+          {surveys.length} {surveys.length === 1 ? "survey" : "surveys"}{" "}
+          available
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {surveys.map((survey) => (
+          <SurveyCard key={survey.id} survey={survey} onClick={onSurveyClick} />
+        ))}
+      </div>
+    </div>
+  );
+}

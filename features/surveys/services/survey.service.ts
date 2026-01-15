@@ -7,29 +7,26 @@ import type {
 class SurveyService {
   async getPublicSurveys(): Promise<SurveyListResponse> {
     try {
-      const response = apiClient.get<SurveyListResponse>(
-        "Survey/GetAllSurveyPublic"
+      const response = await apiClient.get<SurveyListResponse>(
+        "/Survey/GetAllSurveyPublic"
       );
       return response;
     } catch (error) {
       throw new Error(
-        error instanceof Error
-          ? error.message
-          : "Failed to fetch public surveys"
+        error instanceof Error ? error.message : "Failed to fetch surveys"
       );
     }
   }
 
-  async getSurveyImage(surveyId: string): Promise<SurveyImage> {
+  async getSurveyImage(surveyId: string): Promise<SurveyImage | null> {
     try {
-      const response = apiClient.get<SurveyImage>(
-        `Survey/GetSurveyImage?id=${surveyId}`
+      const response = await apiClient.get<SurveyImage>(
+        `/Survey/GetSurveyImage?SurveyId=${surveyId}`
       );
       return response;
     } catch (error) {
-      throw new Error(
-        error instanceof Error ? error.message : "Failed to fetch survey image"
-      );
+      console.log(`No image found for survey ${surveyId}`);
+      return null;
     }
   }
 }
