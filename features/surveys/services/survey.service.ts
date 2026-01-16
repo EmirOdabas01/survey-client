@@ -2,6 +2,8 @@ import { apiClient } from "@/shared/api/api-client";
 import type {
   SurveyListResponse,
   SurveyImage,
+  Survey,
+  GroupSurveyListResponse,
 } from "@/shared/types/survey.types";
 
 class SurveyService {
@@ -47,10 +49,20 @@ class SurveyService {
 
   async getGroupSurveys(): Promise<SurveyListResponse> {
     try {
-      const response = await apiClient.get<SurveyListResponse>(
-        "/survey/groups"
+      const response = await apiClient.get<GroupSurveyListResponse>(
+        "/Survey/GetAllSurveysForGroups"
       );
-      return response;
+
+      const transformedSurveys: Survey[] = response.groupSurveys.map((gs) => ({
+        id: gs.surveyId,
+        name: gs.name,
+        description: gs.description,
+      }));
+
+      return {
+        count: response.count,
+        surveys: transformedSurveys,
+      };
     } catch (error) {
       throw new Error(
         error instanceof Error ? error.message : "Failed to fetch group surveys"
