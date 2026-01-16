@@ -29,6 +29,34 @@ class SurveyService {
       return null;
     }
   }
+
+  async getPrivateSurveys(): Promise<SurveyListResponse> {
+    try {
+      const response = await apiClient.get<SurveyListResponse>(
+        "/Survey/GetAllSurveyPrivate"
+      );
+      return response;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch private surveys"
+      );
+    }
+  }
+
+  async getGroupSurveys(): Promise<SurveyListResponse> {
+    try {
+      const response = await apiClient.get<SurveyListResponse>(
+        "/survey/groups"
+      );
+      return response;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to fetch group surveys"
+      );
+    }
+  }
 }
 
 export const surveyService = new SurveyService();

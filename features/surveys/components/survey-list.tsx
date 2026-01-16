@@ -4,31 +4,46 @@ import { useState, useEffect } from "react";
 import { surveyService } from "../services/survey.service";
 import { SurveyCard } from "./survey-card";
 import type { Survey } from "@/shared/types/survey.types";
-import { apiClient } from "@/shared/api/api-client";
 
 interface SurveyListProps {
   onSurveyClick?: (surveyId: string) => void;
+  surveyType: "public" | "private" | "group";
 }
 
-export function SurveyList({ onSurveyClick }: SurveyListProps) {
+export function SurveyList({ onSurveyClick, surveyType }: SurveyListProps) {
   const [surveys, setSurveys] = useState<Survey[]>([]);
-  const [loading, setLoding] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadSurveys();
-  }, []);
+  }, [surveyType]);
 
   async function loadSurveys() {
-    setLoding(true);
+    setLoading(true);
     setError(null);
     try {
-      const response = await surveyService.getPublicSurveys();
+      let response;
+
+      switch (surveyType) {
+        case "public":
+          response = await surveyService.getPublicSurveys();
+          break;
+        case "private":
+          response = await surveyService.getPrivateSurveys();
+          break;
+        case "group":
+          response = await surveyService.getGroupSurveys();
+          break;
+        default:
+          response = await surveyService.getPublicSurveys();
+      }
+
       setSurveys(response.surveys);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "failed to load surveys");
+      setError(err instanceof Error ? err.message : "Failed to load surveys");
     } finally {
-      setLoding(false);
+      setLoading(false);
     }
   }
 

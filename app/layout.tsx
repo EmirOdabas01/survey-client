@@ -1,4 +1,5 @@
 import { AuthProvider } from "@/features/auth/context/auth-context";
+import { Navbar } from "@/shared/components/navbar";
 import "./globals.css";
 
 export default function RootLayout({
@@ -10,11 +11,8 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthProvider>
-          <div style={{ display: "flex" }}>
-            <div>login</div>
-            <div>Register</div>
-          </div>
-          {children}
+          <Navbar />
+          <main>{children}</main>
         </AuthProvider>
       </body>
     </html>
