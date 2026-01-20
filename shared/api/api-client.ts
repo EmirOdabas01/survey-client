@@ -3,11 +3,10 @@ import {
   getRefreshToken,
   setAccessToken,
   setRefreshToken,
-  getTokenExpiration,
-  deleteAuthTokens,
   isTokenExpired,
-} from "../lib/cookies.client";
-import type { TokenResponse } from "../types/auth.types";
+  deleteAuthTokens,
+} from "@/shared/lib/cookies.client";
+import type { RefreshTokenResponse } from "@/shared/types/auth.types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -26,6 +25,7 @@ class ApiClient {
 
   private async refreshAccessToken(): Promise<string> {
     const refreshToken = getRefreshToken();
+
     if (!refreshToken) {
       throw new Error("No refresh token available");
     }
@@ -43,7 +43,8 @@ class ApiClient {
         throw new Error("Token refresh failed");
       }
 
-      const data: TokenResponse = await response.json();
+      const data: RefreshTokenResponse = await response.json();
+
       setAccessToken(data.token.accessToken, data.token.expiration);
       setRefreshToken(data.token.refreshToken);
 
@@ -55,11 +56,14 @@ class ApiClient {
     }
   }
 
-  async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
+  private async getValidAccessToken(): Promise<string | null> {
     let accessToken = getAccessToken();
+    const refreshToken = getRefreshToken();
 
-    if (accessToken && isTokenExpired() && !this.isRefreshing) {
+    const needsRefresh =
+      (!accessToken && refreshToken) || (accessToken && isTokenExpired());
+
+    if (needsRefresh && !this.isRefreshing) {
       this.isRefreshing = true;
       try {
         accessToken = await this.refreshAccessToken();
@@ -77,6 +81,20 @@ class ApiClient {
           resolve(token);
         });
       });
+    }
+
+    return accessToken;
+  }
+
+  async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const url = `${API_BASE_URL}${endpoint}`;
+
+    let accessToken: string | null = null;
+
+    try {
+      accessToken = await this.getValidAccessToken();
+    } catch (error) {
+      throw error;
     }
 
     const headers: Record<string, string> = {
@@ -143,7 +161,7 @@ class ApiClient {
   async post<T>(
     endpoint: string,
     data?: any,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
@@ -155,7 +173,7 @@ class ApiClient {
   async put<T>(
     endpoint: string,
     data?: any,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
@@ -171,7 +189,7 @@ class ApiClient {
   async patch<T>(
     endpoint: string,
     data?: any,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,

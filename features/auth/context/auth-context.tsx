@@ -10,18 +10,18 @@ import {
 import { useRouter } from "next/navigation";
 import { authService } from "../services/auth.service";
 import type {
-  UserInfoResponse,
+  User,
   LoginCredentials,
   RegisterCredentials,
 } from "@/shared/types/auth.types";
 
 interface AuthContextType {
-  user: UserInfoResponse | null;
+  user: User | null;
   loading: boolean;
   isAuthenticated: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (
-    credentials: RegisterCredentials
+    credentials: RegisterCredentials,
   ) => Promise<{ success: boolean; message: string }>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -30,7 +30,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserInfoResponse | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -40,9 +40,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function loadUser() {
     try {
-      if (authService.isAuthenticated()) {
-        const currentUser = await authService.getCurrentUser();
+      if (!authService.isAuthenticated()) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      const currentUser = await authService.getCurrentUser();
+
+      if (currentUser) {
         setUser(currentUser);
+      } else {
+        if (authService.hasRefreshToken()) {
+          const refreshed = await authService.refreshToken();
+          if (refreshed) {
+            const userAfterRefresh = await authService.getCurrentUser();
+            setUser(userAfterRefresh);
+          } else {
+            setUser(null);
+          }
+        } else {
+          setUser(null);
+        }
       }
     } catch (error) {
       console.error("Failed to load user:", error);
@@ -63,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function register(
-    credentials: RegisterCredentials
+    credentials: RegisterCredentials,
   ): Promise<{ success: boolean; message: string }> {
     try {
       const response = await authService.register(credentials);

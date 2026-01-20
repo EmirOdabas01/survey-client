@@ -1,4 +1,4 @@
-export interface UserInfoResponse {
+export interface User {
   userInfo: {
     nameSurname: string;
     userName: string;
@@ -10,7 +10,13 @@ export interface LoginCredentials {
   nameOrEmail: string;
   password: string;
 }
-
+export interface RefreshTokenResponse {
+  token: {
+    accessToken: string;
+    expiration: string;
+    refreshToken: string;
+  };
+}
 export interface RegisterCredentials {
   nameSurname: string;
   userName: string;
@@ -25,7 +31,11 @@ export interface AuthTokens {
 }
 
 export interface TokenResponse {
-  token: AuthTokens;
+  token: {
+    accessToken: string;
+    expiration: string;
+    refreshToken: string;
+  };
 }
 
 export interface RegisterResponse {

@@ -1,4 +1,3 @@
-// src/shared/lib/cookies.client.ts
 export const COOKIE_NAMES = {
   ACCESS_TOKEN: "access_token",
   REFRESH_TOKEN: "refresh_token",
@@ -15,49 +14,47 @@ export function setAccessToken(token: string, expiration: string) {
   const expirationDate = new Date(expiration);
   const maxAge = Math.floor((expirationDate.getTime() - Date.now()) / 1000);
 
-  document.cookie = `${COOKIE_NAMES.ACCESS_TOKEN}=${token}; path=${
-    COOKIE_OPTIONS.path
-  }; max-age=${maxAge}; ${COOKIE_OPTIONS.secure ? "secure;" : ""} samesite=${
-    COOKIE_OPTIONS.sameSite
-  }`;
-  document.cookie = `${COOKIE_NAMES.TOKEN_EXPIRATION}=${expiration}; path=${
-    COOKIE_OPTIONS.path
-  }; max-age=${maxAge}; ${COOKIE_OPTIONS.secure ? "secure;" : ""} samesite=${
-    COOKIE_OPTIONS.sameSite
-  }`;
+  document.cookie = `${COOKIE_NAMES.ACCESS_TOKEN}=${token}; path=${COOKIE_OPTIONS.path}; max-age=${maxAge}; ${COOKIE_OPTIONS.secure ? "secure;" : ""} samesite=${COOKIE_OPTIONS.sameSite}`;
+  document.cookie = `${COOKIE_NAMES.TOKEN_EXPIRATION}=${expiration}; path=${COOKIE_OPTIONS.path}; max-age=${maxAge}; ${COOKIE_OPTIONS.secure ? "secure;" : ""} samesite=${COOKIE_OPTIONS.sameSite}`;
 }
 
 export function setRefreshToken(token: string) {
-  const maxAge = 40 * 60;
-  document.cookie = `${COOKIE_NAMES.REFRESH_TOKEN}=${token}; path=${
-    COOKIE_OPTIONS.path
-  }; max-age=${maxAge}; ${COOKIE_OPTIONS.secure ? "secure;" : ""} samesite=${
-    COOKIE_OPTIONS.sameSite
-  }`;
+  const maxAge = 30 * 24 * 60 * 60;
+
+  document.cookie = `${COOKIE_NAMES.REFRESH_TOKEN}=${token}; path=${COOKIE_OPTIONS.path}; max-age=${maxAge}; ${COOKIE_OPTIONS.secure ? "secure;" : ""} samesite=${COOKIE_OPTIONS.sameSite}`;
 }
 
 export function getAccessToken(): string | null {
   const cookies = document.cookie.split(";");
   const tokenCookie = cookies.find((c) =>
-    c.trim().startsWith(`${COOKIE_NAMES.ACCESS_TOKEN}=`)
+    c.trim().startsWith(`${COOKIE_NAMES.ACCESS_TOKEN}=`),
   );
-  return tokenCookie ? tokenCookie.split("=")[1] : null;
+  if (!tokenCookie) return null;
+
+  const index = tokenCookie.indexOf("=");
+  return tokenCookie.substring(index + 1);
 }
 
 export function getRefreshToken(): string | null {
   const cookies = document.cookie.split(";");
   const tokenCookie = cookies.find((c) =>
-    c.trim().startsWith(`${COOKIE_NAMES.REFRESH_TOKEN}=`)
+    c.trim().startsWith(`${COOKIE_NAMES.REFRESH_TOKEN}=`),
   );
-  return tokenCookie ? tokenCookie.split("=")[1] : null;
+  if (!tokenCookie) return null;
+
+  const index = tokenCookie.indexOf("=");
+  return tokenCookie.substring(index + 1);
 }
 
 export function getTokenExpiration(): string | null {
   const cookies = document.cookie.split(";");
   const expCookie = cookies.find((c) =>
-    c.trim().startsWith(`${COOKIE_NAMES.TOKEN_EXPIRATION}=`)
+    c.trim().startsWith(`${COOKIE_NAMES.TOKEN_EXPIRATION}=`),
   );
-  return expCookie ? expCookie.split("=")[1] : null;
+  if (!expCookie) return null;
+
+  const index = expCookie.indexOf("=");
+  return expCookie.substring(index + 1);
 }
 
 export function isTokenExpired(): boolean {

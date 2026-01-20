@@ -4,24 +4,27 @@ import {
   setRefreshToken,
   deleteAuthTokens,
   getAccessToken,
+  getRefreshToken,
 } from "@/shared/lib/cookies.client";
 import type {
   LoginCredentials,
   RegisterCredentials,
   TokenResponse,
   RegisterResponse,
-  UserInfoResponse,
+  RefreshTokenResponse,
+  User,
 } from "@/shared/types/auth.types";
-import { userInfo } from "os";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<TokenResponse> {
     try {
       const response = await apiClient.post<TokenResponse>(
         "/Auth/Login",
-        credentials
+        credentials,
       );
-      console.log(response.token.accessToken);
+
       setAccessToken(response.token.accessToken, response.token.expiration);
       setRefreshToken(response.token.refreshToken);
 
@@ -42,38 +45,53 @@ class AuthService {
       };
 
       const response = await apiClient.post<RegisterResponse>(
-        "/User/Register",
-        payload
+        "/Auth/Register",
+        payload,
       );
 
       return response;
     } catch (error) {
       throw new Error(
-        error instanceof Error ? error.message : "Registration failed"
+        error instanceof Error ? error.message : "Registration failed",
       );
     }
   }
 
-  async refreshToken(refreshToken: string): Promise<TokenResponse> {
+  async refreshToken(): Promise<boolean> {
+    const refreshToken = getRefreshToken();
+
+    if (!refreshToken) {
+      return false;
+    }
+
     try {
-      const response = await apiClient.post<TokenResponse>(
-        "/Auth/RefreshTokenLogin",
-        { refreshToken }
-      );
+      const response = await fetch(`${API_BASE_URL}/Auth/RefreshTokenLogin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refreshToken }),
+      });
 
-      setAccessToken(response.token.accessToken, response.token.expiration);
-      setRefreshToken(response.token.refreshToken);
+      if (!response.ok) {
+        deleteAuthTokens();
+        return false;
+      }
 
-      return response;
+      const data: RefreshTokenResponse = await response.json();
+      setAccessToken(data.token.accessToken, data.token.expiration);
+      setRefreshToken(data.token.refreshToken);
+
+      return true;
     } catch (error) {
       deleteAuthTokens();
-      throw new Error("Token refresh failed");
+      return false;
     }
   }
 
   async logout(): Promise<void> {
     try {
-      await apiClient.put("/Auth/Logout");
+      await apiClient.put("/Auth/LogOut");
     } catch (error) {
       console.error("Logout API call failed:", error);
     } finally {
@@ -81,21 +99,24 @@ class AuthService {
     }
   }
 
-  async getCurrentUser(): Promise<UserInfoResponse | null> {
+  async getCurrentUser(): Promise<User | null> {
     try {
-      const token = getAccessToken();
-      if (!token) return null;
-      const userInfo = await apiClient.request<UserInfoResponse>("/Auth/Me");
-      console.log(`user: ${userInfo}`);
-      return userInfo;
+      const user = await apiClient.get<User>("/Auth/Me");
+      return user;
     } catch (error) {
       return null;
     }
   }
 
   isAuthenticated(): boolean {
-    const token = getAccessToken();
-    return !!token;
+    const accessToken = getAccessToken();
+    const refreshToken = getRefreshToken();
+    console.log(!!(accessToken || refreshToken));
+    return !!(accessToken || refreshToken);
+  }
+
+  hasRefreshToken(): boolean {
+    return !!getRefreshToken();
   }
 }
 

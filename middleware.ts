@@ -11,11 +11,13 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/login") || pathname.startsWith("/register");
   const isProtectedPage = pathname.startsWith("/dashboard");
 
-  if (isProtectedPage && !accessToken && !refreshToken) {
+  const hasAnyToken = accessToken || refreshToken;
+
+  if (isProtectedPage && !hasAnyToken) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (isAuthPage && accessToken) {
+  if (isAuthPage && refreshToken) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
