@@ -9,10 +9,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen bg-gray-50">
         <AuthProvider>
-          <Navbar />
-          <main>{children}</main>
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-1">{children}</main>
+          </div>
         </AuthProvider>
       </body>
     </html>

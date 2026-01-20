@@ -3,7 +3,11 @@ export interface Survey {
   name: string;
   description: string;
 }
-
+export interface SurveyDetail {
+  id: string;
+  name: string;
+  description: string;
+}
 export interface SurveyListResponse {
   count: number;
   surveys: Survey[];

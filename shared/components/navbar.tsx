@@ -19,15 +19,18 @@ export function Navbar() {
   }
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="w-full bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-8">
-            <Link href="/" className="text-xl font-bold text-blue-600">
+            <Link
+              href="/"
+              className="text-xl font-bold text-blue-600 no-underline hover:text-blue-700"
+            >
               Survey App
             </Link>
 
-            <div className="hidden md:flex space-x-4">
+            <div className="hidden md:flex items-center space-x-1">
               {navLinks.map((link) => {
                 if (!link.public && !isAuthenticated) return null;
 
@@ -35,10 +38,10 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`px-3 py-2 rounded-md text-sm font-medium no-underline transition-colors ${
                       isActive(link.href)
                         ? "bg-blue-100 text-blue-700"
-                        : "text-gray-700 hover:bg-gray-100"
+                        : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                     }`}
                   >
                     {link.label}
@@ -53,10 +56,10 @@ export function Navbar() {
               <>
                 <Link
                   href="/dashboard"
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-3 py-2 rounded-md text-sm font-medium no-underline transition-colors ${
                     pathname.startsWith("/dashboard")
                       ? "bg-blue-100 text-blue-700"
-                      : "text-gray-700 hover:bg-gray-100"
+                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                   }`}
                 >
                   Dashboard
@@ -77,13 +80,13 @@ export function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 no-underline hover:text-gray-900 transition-colors"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md no-underline hover:bg-blue-700 transition-colors"
                 >
                   Register
                 </Link>

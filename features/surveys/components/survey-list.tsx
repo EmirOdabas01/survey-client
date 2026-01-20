@@ -128,7 +128,14 @@ export function SurveyList({ onSurveyClick, surveyType }: SurveyListProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 350px))",
+          gap: "24px",
+          justifyContent: "start",
+        }}
+      >
         {surveys.map((survey) => (
           <SurveyCard key={survey.id} survey={survey} onClick={onSurveyClick} />
         ))}

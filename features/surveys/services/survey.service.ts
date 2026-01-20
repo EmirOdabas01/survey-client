@@ -4,6 +4,7 @@ import type {
   SurveyImage,
   Survey,
   GroupSurveyListResponse,
+  SurveyDetail,
 } from "@/shared/types/survey.types";
 
 class SurveyService {
@@ -20,6 +21,18 @@ class SurveyService {
     }
   }
 
+  async getSurveyById(surveyId: string): Promise<SurveyDetail | null> {
+    try {
+      const response = await apiClient.get<SurveyDetail>(
+        `/Survey/GetSurveyById/${surveyId}`
+      );
+      return response;
+    } catch (error) {
+      console.log("failed to get survey by ıd");
+      return null;
+    }
+  }
+
   async getSurveyImage(surveyId: string): Promise<SurveyImage | null> {
     try {
       const response = await apiClient.get<SurveyImage>(
@@ -28,7 +41,11 @@ class SurveyService {
       return response;
     } catch (error) {
       console.log(`No image found for survey ${surveyId}`);
-      return null;
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch survey details"
+      );
     }
   }
 

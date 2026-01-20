@@ -22,9 +22,7 @@ export function SurveyCard({ survey, onClick }: SurveyCardProps) {
       if (imageData?.path) {
         const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "";
         const baseUrl = apiBaseUrl.replace("/api", "");
-
         const cleanPath = imageData.path.replace(/\\/g, "/");
-
         const fullImageUrl = `${baseUrl}${cleanPath}/${survey.id}.png`;
         setImagePath(fullImageUrl);
       }
@@ -40,29 +38,31 @@ export function SurveyCard({ survey, onClick }: SurveyCardProps) {
   return (
     <div
       onClick={handleClick}
-      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer overflow-hidden"
+      style={{ maxWidth: "350px", width: "100%" }}
+      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer overflow-hidden border border-gray-200"
     >
       {imagePath && (
-        <div className="h-48 bg-gray-200">
+        <div
+          style={{ height: "160px", width: "100%" }}
+          className="overflow-hidden bg-gray-100"
+        >
           <img
             src={imagePath}
             alt={survey.name}
-            className="w-full h-full object-cover"
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
             onError={() => setImagePath(null)}
           />
         </div>
       )}
 
-      <div className={`p-4 ${!imagePath ? "pt-6" : ""}`}>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+      <div className={`p-4 text-center ${!imagePath ? "pt-6" : ""}`}>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">
           {survey.name}
         </h3>
-        <p className="text-sm text-gray-600 line-clamp-3">
-          {survey.description}
-        </p>
+        <p className="text-sm text-gray-600">{survey.description}</p>
       </div>
 
-      <div className="px-4 pb-4">
+      <div className="px-4 pb-4 text-center">
         <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200">
           View Survey
         </button>
