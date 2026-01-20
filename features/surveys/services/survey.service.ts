@@ -5,6 +5,9 @@ import type {
   Survey,
   GroupSurveyListResponse,
   SurveyDetail,
+  SubmitAnswersRequest,
+  SurveyQuestionsResponse,
+  StartSurveyResponse,
 } from "@/shared/types/survey.types";
 
 class SurveyService {
@@ -83,6 +86,44 @@ class SurveyService {
     } catch (error) {
       throw new Error(
         error instanceof Error ? error.message : "Failed to fetch group surveys"
+      );
+    }
+  }
+
+  async getSurveyQuestions(surveyId: string): Promise<SurveyQuestionsResponse> {
+    try {
+      const response = await apiClient.get<SurveyQuestionsResponse>(
+        `/Question/GetSurveyQuestions/${surveyId}`
+      );
+      return response;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch survey questions"
+      );
+    }
+  }
+
+  async startSurvey(surveyId: string): Promise<StartSurveyResponse> {
+    try {
+      const response = await apiClient.post<StartSurveyResponse>(
+        `/SurveyState/StartSurvey/${surveyId}`
+      );
+      return response;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to start survey"
+      );
+    }
+  }
+
+  async submitAnswers(data: SubmitAnswersRequest): Promise<void> {
+    try {
+      await apiClient.post("/SurveyState/SubmitAnswers", data);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to submit answers"
       );
     }
   }

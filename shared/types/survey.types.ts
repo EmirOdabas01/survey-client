@@ -27,3 +27,46 @@ export interface GroupSurveyListResponse {
   count: number;
   groupSurveys: GroupSurvey[];
 }
+
+export enum QuestionType {
+  Open = 1,
+  Dropdown = 2,
+  MultipleChoice = 3,
+  Logical = 4,
+}
+
+// Question option
+export interface QuestionOption {
+  id: number;
+  order: number;
+  value: string;
+}
+
+export interface Question {
+  id: number;
+  order: number;
+  type: QuestionType;
+  questionText: string;
+  isMandatory: boolean;
+  questionOptions: QuestionOption[];
+}
+
+export interface SurveyQuestionsResponse {
+  surveyId: string;
+  questions: Question[];
+}
+
+export interface StartSurveyResponse {
+  responseId: number;
+}
+
+export interface QuestionAnswer {
+  questionId: number;
+  questionAnswer: string | null;
+  questionOptionsIds: number[] | null;
+}
+
+export interface SubmitAnswersRequest {
+  responseId: number;
+  answers: QuestionAnswer[];
+}

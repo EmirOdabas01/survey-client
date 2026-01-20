@@ -8,11 +8,6 @@ export default function SurveyPage() {
   const router = useRouter();
   const surveyId = params.surveyId as string;
 
-  function handleStartSurvey(id: string) {
-    console.log("Starting survey:", id);
-    alert("Survey start functionality coming soon!");
-  }
-
   function handleGoBack() {
     router.back();
   }
@@ -40,10 +35,7 @@ export default function SurveyPage() {
           Back to Surveys
         </button>
 
-        <SurveyDetailView
-          surveyId={surveyId}
-          onStartSurvey={handleStartSurvey}
-        />
+        <SurveyDetailView surveyId={surveyId} />
       </div>
     </div>
   );
