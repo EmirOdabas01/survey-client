@@ -202,13 +202,43 @@ class SurveyService {
     }
   }
   async uploadSurveyImage(surveyId: string, file: File): Promise<void> {
-    console.log("Upload image for survey:", surveyId, file);
-    throw new Error("Not implemented yet");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const accessToken = (
+        await import("@/shared/lib/cookies.client")
+      ).getAccessToken();
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/Survey/UploadSurveyImage?Id=${surveyId}`,
+        {
+          method: "POST",
+          headers: {
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+          },
+          body: formData,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to upload image",
+      );
+    }
   }
 
   async removeSurveyImage(surveyId: string): Promise<void> {
-    console.log("Remove image for survey:", surveyId);
-    throw new Error("Not implemented yet");
+    try {
+      await apiClient.delete(`/Survey/RemoveSurveyImage?Id=${surveyId}`);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to remove image",
+      );
+    }
   }
 }
 

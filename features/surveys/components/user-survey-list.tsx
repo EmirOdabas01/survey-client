@@ -5,6 +5,7 @@ import { surveyService } from "../services/survey.service";
 import { UserSurveyCard } from "./user-survey-card";
 import { CreateSurveyForm } from "./create-survey-form";
 import { UpdateSurveyForm } from "./update-survey-form";
+import { UploadImageModal } from "./upload-image-modal";
 import type { UserSurvey } from "@/shared/types/survey.types";
 
 export function UserSurveyList() {
@@ -13,6 +14,9 @@ export function UserSurveyList() {
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingSurvey, setEditingSurvey] = useState<UserSurvey | null>(null);
+  const [uploadingSurvey, setUploadingSurvey] = useState<UserSurvey | null>(
+    null,
+  );
 
   useEffect(() => {
     loadSurveys();
@@ -106,19 +110,32 @@ export function UserSurveyList() {
   }
 
   function handleUploadImage(surveyId: string) {
-    alert(
-      `Upload image for survey: ${surveyId}\n\nEndpoint will be implemented soon.`,
-    );
-  }
-
-  function handleRemoveImage(surveyId: string) {
-    if (confirm("Are you sure you want to remove this image?")) {
-      alert(
-        `Remove image for survey: ${surveyId}\n\nEndpoint will be implemented soon.`,
-      );
+    const survey = surveys.find((s) => s.id === surveyId);
+    if (survey) {
+      setUploadingSurvey(survey);
     }
   }
 
+  async function handleRemoveImage(surveyId: string) {
+    if (!confirm("Are you sure you want to remove this image?")) {
+      return;
+    }
+
+    try {
+      const imageData = await surveyService.getSurveyImage(surveyId);
+
+      if (!imageData || !imageData.id) {
+        alert("No image found for this survey");
+        return;
+      }
+
+      await surveyService.removeSurveyImage(imageData.id);
+      alert("Image removed successfully!");
+      loadSurveys();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Failed to remove image");
+    }
+  }
   function handleViewQuestions(surveyId: string) {
     alert(
       `View questions for survey: ${surveyId}\n\nEndpoint will be implemented soon.`,
@@ -130,6 +147,10 @@ export function UserSurveyList() {
   }
 
   function handleSurveyUpdated() {
+    loadSurveys();
+  }
+
+  function handleImageUploaded() {
     loadSurveys();
   }
 
@@ -261,6 +282,15 @@ export function UserSurveyList() {
           survey={editingSurvey}
           onClose={() => setEditingSurvey(null)}
           onUpdated={handleSurveyUpdated}
+        />
+      )}
+
+      {uploadingSurvey && (
+        <UploadImageModal
+          surveyId={uploadingSurvey.id}
+          surveyName={uploadingSurvey.name}
+          onClose={() => setUploadingSurvey(null)}
+          onUploaded={handleImageUploaded}
         />
       )}
     </div>
