@@ -9,6 +9,7 @@ import type {
   SurveyQuestionsResponse,
   StartSurveyResponse,
   CreateSurveyRequest,
+  UserSurveyListResponse,
 } from "@/shared/types/survey.types";
 
 class SurveyService {
@@ -139,6 +140,44 @@ class SurveyService {
         error instanceof Error ? error.message : "Failed to create survey",
       );
     }
+  }
+
+  async getUserSurveys(): Promise<UserSurveyListResponse> {
+    try {
+      const response = await apiClient.get<UserSurveyListResponse>(
+        "/Survey/GetUserSurveys",
+      );
+      return response;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to fetch user surveys",
+      );
+    }
+  }
+
+  async publishSurvey(surveyId: string): Promise<void> {
+    console.log("Publish survey:", surveyId);
+    throw new Error("Not implemented yet");
+  }
+
+  async closeSurvey(surveyId: string): Promise<void> {
+    console.log("Close survey:", surveyId);
+    throw new Error("Not implemented yet");
+  }
+
+  async deleteSurvey(surveyId: string): Promise<void> {
+    console.log("Delete survey:", surveyId);
+    throw new Error("Not implemented yet");
+  }
+
+  async uploadSurveyImage(surveyId: string, file: File): Promise<void> {
+    console.log("Upload image for survey:", surveyId, file);
+    throw new Error("Not implemented yet");
+  }
+
+  async removeSurveyImage(surveyId: string): Promise<void> {
+    console.log("Remove image for survey:", surveyId);
+    throw new Error("Not implemented yet");
   }
 }
 

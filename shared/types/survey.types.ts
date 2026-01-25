@@ -86,3 +86,27 @@ export interface CreateSurveyRequest {
   maxResponse: number;
   visibility: SurveyVisibility;
 }
+
+export enum SurveyState {
+  Planned = "Planned",
+  Open = "Open",
+  Closed = "Closed",
+}
+
+export interface UserSurvey {
+  id: string;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string | null;
+  minResponse: number;
+  maxResponse: number;
+  visibility: string;
+  state: string;
+  path: string | null;
+}
+
+export interface UserSurveyListResponse {
+  count: number;
+  surveys: UserSurvey[];
+}
