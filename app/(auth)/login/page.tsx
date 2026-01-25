@@ -6,7 +6,6 @@ import Link from "next/link";
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const { logout } = useAuth();
   const [nameOrEmail, setNameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

@@ -28,7 +28,7 @@ export default function DashboardSurveysPage() {
       <div className="bg-white rounded-lg shadow-md border border-gray-200 p-8 text-center">
         <p className="text-gray-600">Survey list will be displayed here</p>
         <p className="text-gray-400 text-sm mt-2">
-          We'll add GetUserSurveys next
+          {"We'll add GetUserSurveys next"}
         </p>
       </div>
 
