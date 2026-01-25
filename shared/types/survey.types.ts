@@ -70,3 +70,19 @@ export interface SubmitAnswersRequest {
   responseId: number;
   answers: QuestionAnswer[];
 }
+
+export enum SurveyVisibility {
+  Public = 1,
+  Group = 2,
+  Private = 3,
+}
+
+export interface CreateSurveyRequest {
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string | null;
+  minResponse: number;
+  maxResponse: number;
+  visibility: SurveyVisibility;
+}

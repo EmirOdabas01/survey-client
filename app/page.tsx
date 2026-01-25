@@ -40,6 +40,8 @@ export default function Home() {
         )}
 
         <SurveyList onSurveyClick={handleSurveyClick} surveyType="public" />
+        <SurveyList onSurveyClick={handleSurveyClick} surveyType="private" />
+        <SurveyList onSurveyClick={handleSurveyClick} surveyType="group" />
       </div>
     </div>
   );

@@ -7,8 +7,30 @@ import {
   deleteAuthTokens,
 } from "@/shared/lib/cookies.client";
 import type { RefreshTokenResponse } from "@/shared/types/auth.types";
+import type { ValidationErrors } from "@/shared/types/api.types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+export class ApiValidationError extends Error {
+  errors: ValidationErrors;
+
+  constructor(errors: ValidationErrors) {
+    const message = errors
+      .map((e) => `${e.key}: ${e.value.join(", ")}`)
+      .join("; ");
+    super(message);
+    this.name = "ApiValidationError";
+    this.errors = errors;
+  }
+
+  getFieldErrors(): Record<string, string[]> {
+    const fieldErrors: Record<string, string[]> = {};
+    this.errors.forEach((e) => {
+      fieldErrors[e.key.toLowerCase()] = e.value;
+    });
+    return fieldErrors;
+  }
+}
 
 class ApiClient {
   private isRefreshing = false;
@@ -118,6 +140,16 @@ class ApiClient {
         headers,
       });
 
+      if (response.status === 400) {
+        const errorData = await response.json();
+
+        if (Array.isArray(errorData)) {
+          throw new ApiValidationError(errorData as ValidationErrors);
+        }
+
+        throw new Error(errorData.message || "Bad request");
+      }
+
       if (response.status === 401 && !this.isRefreshing) {
         this.isRefreshing = true;
         try {
@@ -148,7 +180,12 @@ class ApiClient {
         throw new Error(error.message || "Request failed");
       }
 
-      return await response.json();
+      const text = await response.text();
+      if (!text) {
+        return {} as T;
+      }
+
+      return JSON.parse(text);
     } catch (error) {
       throw error;
     }

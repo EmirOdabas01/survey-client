@@ -8,18 +8,19 @@ import type {
   SubmitAnswersRequest,
   SurveyQuestionsResponse,
   StartSurveyResponse,
+  CreateSurveyRequest,
 } from "@/shared/types/survey.types";
 
 class SurveyService {
   async getPublicSurveys(): Promise<SurveyListResponse> {
     try {
       const response = await apiClient.get<SurveyListResponse>(
-        "/Survey/GetAllSurveyPublic"
+        "/Survey/GetAllSurveyPublic",
       );
       return response;
     } catch (error) {
       throw new Error(
-        error instanceof Error ? error.message : "Failed to fetch surveys"
+        error instanceof Error ? error.message : "Failed to fetch surveys",
       );
     }
   }
@@ -27,7 +28,7 @@ class SurveyService {
   async getSurveyById(surveyId: string): Promise<SurveyDetail | null> {
     try {
       const response = await apiClient.get<SurveyDetail>(
-        `/Survey/GetSurveyById/${surveyId}`
+        `/Survey/GetSurveyById/${surveyId}`,
       );
       return response;
     } catch (error) {
@@ -39,7 +40,7 @@ class SurveyService {
   async getSurveyImage(surveyId: string): Promise<SurveyImage | null> {
     try {
       const response = await apiClient.get<SurveyImage>(
-        `/Survey/GetSurveyImage?SurveyId=${surveyId}`
+        `/Survey/GetSurveyImage?SurveyId=${surveyId}`,
       );
       return response;
     } catch (error) {
@@ -47,7 +48,7 @@ class SurveyService {
       throw new Error(
         error instanceof Error
           ? error.message
-          : "Failed to fetch survey details"
+          : "Failed to fetch survey details",
       );
     }
   }
@@ -55,14 +56,14 @@ class SurveyService {
   async getPrivateSurveys(): Promise<SurveyListResponse> {
     try {
       const response = await apiClient.get<SurveyListResponse>(
-        "/Survey/GetAllSurveyPrivate"
+        "/Survey/GetAllSurveyPrivate",
       );
       return response;
     } catch (error) {
       throw new Error(
         error instanceof Error
           ? error.message
-          : "Failed to fetch private surveys"
+          : "Failed to fetch private surveys",
       );
     }
   }
@@ -70,7 +71,7 @@ class SurveyService {
   async getGroupSurveys(): Promise<SurveyListResponse> {
     try {
       const response = await apiClient.get<GroupSurveyListResponse>(
-        "/Survey/GetAllSurveysForGroups"
+        "/Survey/GetAllSurveysForGroups",
       );
 
       const transformedSurveys: Survey[] = response.groupSurveys.map((gs) => ({
@@ -85,7 +86,9 @@ class SurveyService {
       };
     } catch (error) {
       throw new Error(
-        error instanceof Error ? error.message : "Failed to fetch group surveys"
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch group surveys",
       );
     }
   }
@@ -93,14 +96,14 @@ class SurveyService {
   async getSurveyQuestions(surveyId: string): Promise<SurveyQuestionsResponse> {
     try {
       const response = await apiClient.get<SurveyQuestionsResponse>(
-        `/Question/GetSurveyQuestions/${surveyId}`
+        `/Question/GetSurveyQuestions/${surveyId}`,
       );
       return response;
     } catch (error) {
       throw new Error(
         error instanceof Error
           ? error.message
-          : "Failed to fetch survey questions"
+          : "Failed to fetch survey questions",
       );
     }
   }
@@ -108,12 +111,12 @@ class SurveyService {
   async startSurvey(surveyId: string): Promise<StartSurveyResponse> {
     try {
       const response = await apiClient.post<StartSurveyResponse>(
-        `/SurveyState/StartSurvey/${surveyId}`
+        `/SurveyState/StartSurvey/${surveyId}`,
       );
       return response;
     } catch (error) {
       throw new Error(
-        error instanceof Error ? error.message : "Failed to start survey"
+        error instanceof Error ? error.message : "Failed to start survey",
       );
     }
   }
@@ -123,7 +126,17 @@ class SurveyService {
       await apiClient.post("/SurveyState/SubmitAnswers", data);
     } catch (error) {
       throw new Error(
-        error instanceof Error ? error.message : "Failed to submit answers"
+        error instanceof Error ? error.message : "Failed to submit answers",
+      );
+    }
+  }
+
+  async createSurvey(data: CreateSurveyRequest): Promise<void> {
+    try {
+      await apiClient.post("/Survey/CreateSurvey", data);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to create survey",
       );
     }
   }
