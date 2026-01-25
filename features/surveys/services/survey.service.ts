@@ -10,6 +10,8 @@ import type {
   StartSurveyResponse,
   CreateSurveyRequest,
   UserSurveyListResponse,
+  UpdateSurveyRequest,
+  SuccessResponse,
 } from "@/shared/types/survey.types";
 
 class SurveyService {
@@ -154,22 +156,51 @@ class SurveyService {
       );
     }
   }
-
-  async publishSurvey(surveyId: string): Promise<void> {
-    console.log("Publish survey:", surveyId);
-    throw new Error("Not implemented yet");
+  async publishSurvey(surveyId: string): Promise<SuccessResponse> {
+    try {
+      const response = await apiClient.put<SuccessResponse>(
+        `/Survey/PublishSurvey/${surveyId}`,
+      );
+      return response;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to publish survey",
+      );
+    }
   }
 
-  async closeSurvey(surveyId: string): Promise<void> {
-    console.log("Close survey:", surveyId);
-    throw new Error("Not implemented yet");
+  async closeSurvey(surveyId: string): Promise<SuccessResponse> {
+    try {
+      const response = await apiClient.put<SuccessResponse>(
+        `/Survey/CloseSurvey/${surveyId}`,
+      );
+      return response;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to close survey",
+      );
+    }
+  }
+
+  async updateSurvey(data: UpdateSurveyRequest): Promise<void> {
+    try {
+      await apiClient.put("/Survey/UpdateSurvey", data);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to update survey",
+      );
+    }
   }
 
   async deleteSurvey(surveyId: string): Promise<void> {
-    console.log("Delete survey:", surveyId);
-    throw new Error("Not implemented yet");
+    try {
+      await apiClient.delete(`/Survey/RemoveSurvey/${surveyId}`);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to delete survey",
+      );
+    }
   }
-
   async uploadSurveyImage(surveyId: string, file: File): Promise<void> {
     console.log("Upload image for survey:", surveyId, file);
     throw new Error("Not implemented yet");

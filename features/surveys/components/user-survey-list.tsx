@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { surveyService } from "../services/survey.service";
 import { UserSurveyCard } from "./user-survey-card";
 import { CreateSurveyForm } from "./create-survey-form";
+import { UpdateSurveyForm } from "./update-survey-form";
 import type { UserSurvey } from "@/shared/types/survey.types";
 
 export function UserSurveyList() {
@@ -11,6 +12,7 @@ export function UserSurveyList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingSurvey, setEditingSurvey] = useState<UserSurvey | null>(null);
 
   useEffect(() => {
     loadSurveys();
@@ -29,27 +31,77 @@ export function UserSurveyList() {
     }
   }
 
-  function handlePublish(surveyId: string) {
-    alert(`Publish survey: ${surveyId}\n\nEndpoint will be implemented soon.`);
+  async function handlePublish(surveyId: string) {
+    if (
+      !confirm(
+        "Are you sure you want to publish this survey? It will become visible to users.",
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const response = await surveyService.publishSurvey(surveyId);
+      if (response.success) {
+        alert("Survey published successfully!");
+        loadSurveys();
+      } else {
+        alert("Failed to publish survey. Please try again.");
+      }
+    } catch (error) {
+      alert(
+        error instanceof Error ? error.message : "Failed to publish survey",
+      );
+    }
   }
 
-  function handleClose(surveyId: string) {
-    alert(`Close survey: ${surveyId}\n\nEndpoint will be implemented soon.`);
+  async function handleClose(surveyId: string) {
+    if (
+      !confirm(
+        "Are you sure you want to close this survey? Users will no longer be able to respond.",
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const response = await surveyService.closeSurvey(surveyId);
+      if (response.success) {
+        alert("Survey closed successfully!");
+        loadSurveys();
+      } else {
+        alert("Failed to close survey. Please try again.");
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Failed to close survey");
+    }
   }
 
   function handleAnalyze(surveyId: string) {
-    alert(`Analyze survey: ${surveyId}\n\nEndpoint will be implemented soon.`);
-  }
-
-  function handleUpdate(survey: UserSurvey) {
     alert(
-      `Update survey: ${survey.name}\n\nEndpoint will be implemented soon.`,
+      `Analyze survey: ${surveyId}\n\nAnalyze feature will be implemented soon.`,
     );
   }
 
-  function handleDelete(surveyId: string) {
-    if (confirm("Are you sure you want to delete this survey?")) {
-      alert(`Delete survey: ${surveyId}\n\nEndpoint will be implemented soon.`);
+  function handleUpdate(survey: UserSurvey) {
+    setEditingSurvey(survey);
+  }
+
+  async function handleDelete(surveyId: string) {
+    if (
+      !confirm(
+        "Are you sure you want to delete this survey? This action cannot be undone.",
+      )
+    ) {
+      return;
+    }
+
+    try {
+      await surveyService.deleteSurvey(surveyId);
+      alert("Survey deleted successfully!");
+      setSurveys((prev) => prev.filter((s) => s.id !== surveyId));
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Failed to delete survey");
     }
   }
 
@@ -74,6 +126,10 @@ export function UserSurveyList() {
   }
 
   function handleSurveyCreated() {
+    loadSurveys();
+  }
+
+  function handleSurveyUpdated() {
     loadSurveys();
   }
 
@@ -139,34 +195,72 @@ export function UserSurveyList() {
         </button>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 350px))",
-          gap: "24px",
-          justifyContent: "start",
-        }}
-      >
-        {surveys.map((survey) => (
-          <UserSurveyCard
-            key={survey.id}
-            survey={survey}
-            onPublish={handlePublish}
-            onClose={handleClose}
-            onAnalyze={handleAnalyze}
-            onUpdate={handleUpdate}
-            onDelete={handleDelete}
-            onUploadImage={handleUploadImage}
-            onRemoveImage={handleRemoveImage}
-            onViewQuestions={handleViewQuestions}
-          />
-        ))}
-      </div>
+      {surveys.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-12 text-center">
+          <div className="text-gray-400 mb-4">
+            <svg
+              className="w-16 h-16 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <p className="text-gray-900 font-medium mb-2">No surveys yet</p>
+          <p className="text-gray-600 mb-4">
+            Create your first survey to get started
+          </p>
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            Create Your First Survey
+          </button>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 350px))",
+            gap: "24px",
+            justifyContent: "start",
+          }}
+        >
+          {surveys.map((survey) => (
+            <UserSurveyCard
+              key={survey.id}
+              survey={survey}
+              onPublish={handlePublish}
+              onClose={handleClose}
+              onAnalyze={handleAnalyze}
+              onUpdate={handleUpdate}
+              onDelete={handleDelete}
+              onUploadImage={handleUploadImage}
+              onRemoveImage={handleRemoveImage}
+              onViewQuestions={handleViewQuestions}
+            />
+          ))}
+        </div>
+      )}
 
       {showCreateForm && (
         <CreateSurveyForm
           onClose={() => setShowCreateForm(false)}
           onCreated={handleSurveyCreated}
+        />
+      )}
+
+      {editingSurvey && (
+        <UpdateSurveyForm
+          survey={editingSurvey}
+          onClose={() => setEditingSurvey(null)}
+          onUpdated={handleSurveyUpdated}
         />
       )}
     </div>

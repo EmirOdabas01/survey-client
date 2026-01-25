@@ -110,3 +110,18 @@ export interface UserSurveyListResponse {
   count: number;
   surveys: UserSurvey[];
 }
+
+export interface UpdateSurveyRequest {
+  id: string;
+  name: string;
+  description: string;
+  visibility: SurveyVisibility;
+  startDate: string;
+  endDate: string | null;
+  minResponse: number;
+  maxResponse: number;
+}
+
+export interface SuccessResponse {
+  success: boolean;
+}
