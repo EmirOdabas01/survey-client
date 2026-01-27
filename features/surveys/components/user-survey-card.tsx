@@ -28,10 +28,11 @@ export function UserSurveyCard({
 }: UserSurveyCardProps) {
   const [imageError, setImageError] = useState(false);
 
-  const imageUrl =
-    survey.path && !imageError
-      ? `${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}/${survey.path.replace(/\\/g, "/")}/${survey.id}.png`
-      : null;
+  const hasImage = survey.path && survey.path !== "//" && !imageError;
+
+  const imageUrl = hasImage
+    ? `${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${survey.path?.replace(/\\/g, "/")}`
+    : null;
 
   function formatDate(dateString: string | null): string {
     if (!dateString) return "No end date";
@@ -232,7 +233,7 @@ export function UserSurveyCard({
           >
             Edit
           </button>
-          {survey.path ? (
+          {hasImage ? (
             <button
               onClick={() => onRemoveImage(survey.id)}
               className="py-2 px-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-md transition-colors"

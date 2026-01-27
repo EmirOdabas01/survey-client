@@ -19,11 +19,11 @@ export function SurveyCard({ survey, onClick }: SurveyCardProps) {
   async function loadSurveyImage() {
     try {
       const imageData = await surveyService.getSurveyImage(survey.id);
-      if (imageData?.path) {
+      if (imageData?.path && imageData.path !== "//") {
         const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "";
         const baseUrl = apiBaseUrl.replace("/api", "");
         const cleanPath = imageData.path.replace(/\\/g, "/");
-        const fullImageUrl = `${baseUrl}${cleanPath}/${survey.id}.png`;
+        const fullImageUrl = `${baseUrl}${cleanPath}`;
         setImagePath(fullImageUrl);
       }
     } catch (error) {}
