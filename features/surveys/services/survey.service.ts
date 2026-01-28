@@ -14,6 +14,7 @@ import type {
   SuccessResponse,
   CreateQuestionRequest,
   UpdateQuestionRequest,
+  SurveyAnalysisResponse,
 } from "@/shared/types/survey.types";
 
 class SurveyService {
@@ -294,6 +295,19 @@ class SurveyService {
     } catch (error) {
       throw new Error(
         error instanceof Error ? error.message : "Failed to remove question",
+      );
+    }
+  }
+
+  async analyzeSurvey(surveyId: string): Promise<SurveyAnalysisResponse> {
+    try {
+      const response = await apiClient.get<SurveyAnalysisResponse>(
+        `/Survey/AnalyzeSurvey/${surveyId}`,
+      );
+      return response;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to analyze survey",
       );
     }
   }

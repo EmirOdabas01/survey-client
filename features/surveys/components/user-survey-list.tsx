@@ -84,9 +84,7 @@ export function UserSurveyList() {
   }
 
   function handleAnalyze(surveyId: string) {
-    alert(
-      `Analyze survey: ${surveyId}\n\nAnalyze feature will be implemented soon.`,
-    );
+    router.push(`/dashboard/surveys/${surveyId}/analysis`);
   }
 
   function handleUpdate(survey: UserSurvey) {

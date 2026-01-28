@@ -157,3 +157,38 @@ export interface UpdateQuestionRequest {
   isMandatory: boolean;
   questionOptions: UpdateQuestionOptionRequest[];
 }
+
+export interface OptionAnalysisInfo {
+  optionText: string;
+  order: number;
+  ratio: number;
+}
+
+export interface SingleQuestionAnalysis {
+  questionText: string;
+  order: number;
+  optionAnalysisInfo: OptionAnalysisInfo[];
+}
+
+export interface QuestionAnalysis {
+  singleQuestionAnalysis: SingleQuestionAnalysis[];
+  unsolvedRatio: number;
+}
+
+export interface StatisticAnalysis {
+  totalResponse: number;
+  completionRatio: number;
+  avgDuration: string;
+}
+
+export interface OpenQuestionAnalysis {
+  questionText: string;
+  order: number;
+  answers: string[];
+}
+
+export interface SurveyAnalysisResponse {
+  questionAnalysis: QuestionAnalysis;
+  statisticAnalysis: StatisticAnalysis;
+  openQuestionAnalysis: OpenQuestionAnalysis[];
+}
