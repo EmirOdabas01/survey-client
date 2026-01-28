@@ -25,14 +25,6 @@ export default function DashboardPage() {
             View your groups, create new ones, or leave
           </p>
         </Link>
-
-        <Link
-          href="/dashboard/users"
-          className="p-6 bg-white rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200"
-        >
-          <h2 className="text-xl font-semibold mb-2">Manage Users</h2>
-          <p className="text-gray-600">View and manage users</p>
-        </Link>
       </div>
     </div>
   );
