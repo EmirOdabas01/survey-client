@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { surveyService } from "../services/survey.service";
 import { QuestionType } from "@/shared/types/survey.types";
 import { AddQuestionForm } from "./add-question-form";
+import { EditQuestionForm } from "./edit-question-form";
 import type { Question } from "@/shared/types/survey.types";
 
 interface SurveyQuestionsProps {
@@ -15,6 +16,7 @@ export function SurveyQuestions({ surveyId }: SurveyQuestionsProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
 
   useEffect(() => {
     loadQuestions();
@@ -95,27 +97,45 @@ export function SurveyQuestions({ surveyId }: SurveyQuestionsProps) {
   }
 
   function handleEditQuestion(question: Question) {
-    alert(
-      `Edit question: ${question.questionText}\n\nWill be implemented with UpdateSurveyQuestions endpoint`,
-    );
+    setEditingQuestion(question);
   }
 
-  function handleDeleteQuestion(questionId: number) {
-    if (confirm("Are you sure you want to delete this question?")) {
+  function handleQuestionUpdated() {
+    loadQuestions();
+  }
+
+  async function handleDeleteQuestion(questionId: number) {
+    if (!confirm("Are you sure you want to delete this question?")) {
+      return;
+    }
+
+    try {
+      await surveyService.removeSingleQuestion(questionId, surveyId);
+      alert("Question deleted successfully!");
+      loadQuestions();
+    } catch (error) {
       alert(
-        `Delete question: ${questionId}\n\nWill be implemented with RemoveSingleQuestion endpoint`,
+        error instanceof Error ? error.message : "Failed to delete question",
       );
     }
   }
 
-  function handleDeleteAllQuestions() {
+  async function handleDeleteAllQuestions() {
     if (
-      confirm(
+      !confirm(
         "Are you sure you want to delete ALL questions? This action cannot be undone.",
       )
     ) {
+      return;
+    }
+
+    try {
+      await surveyService.removeAllSurveyQuestions(surveyId);
+      alert("All questions deleted successfully!");
+      setQuestions([]);
+    } catch (error) {
       alert(
-        "Delete all questions - will be implemented with RemoveSurveyQuestions endpoint",
+        error instanceof Error ? error.message : "Failed to delete questions",
       );
     }
   }
@@ -462,6 +482,15 @@ export function SurveyQuestions({ surveyId }: SurveyQuestionsProps) {
           nextOrder={nextOrder}
           onClose={() => setShowAddForm(false)}
           onAdded={handleQuestionAdded}
+        />
+      )}
+
+      {editingQuestion && (
+        <EditQuestionForm
+          surveyId={surveyId}
+          question={editingQuestion}
+          onClose={() => setEditingQuestion(null)}
+          onUpdated={handleQuestionUpdated}
         />
       )}
     </div>

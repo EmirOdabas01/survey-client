@@ -143,3 +143,17 @@ export interface CreateSurveyQuestionsRequest {
   surveyId: string;
   questions: CreateQuestionRequest[];
 }
+
+export interface UpdateQuestionOptionRequest {
+  id: number;
+  order: number;
+  value: string;
+}
+
+export interface UpdateQuestionRequest {
+  id: number;
+  order: number;
+  questionText: string;
+  isMandatory: boolean;
+  questionOptions: UpdateQuestionOptionRequest[];
+}

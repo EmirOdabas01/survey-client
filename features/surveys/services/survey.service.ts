@@ -13,6 +13,7 @@ import type {
   UpdateSurveyRequest,
   SuccessResponse,
   CreateQuestionRequest,
+  UpdateQuestionRequest,
 } from "@/shared/types/survey.types";
 
 class SurveyService {
@@ -254,6 +255,45 @@ class SurveyService {
     } catch (error) {
       throw new Error(
         error instanceof Error ? error.message : "Failed to create questions",
+      );
+    }
+  }
+  async updateSurveyQuestions(
+    surveyId: string,
+    questions: UpdateQuestionRequest[],
+  ): Promise<void> {
+    try {
+      await apiClient.put("/Question/UpdateSurveyQuestions", {
+        surveyId,
+        questions,
+      });
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to update questions",
+      );
+    }
+  }
+  async removeAllSurveyQuestions(surveyId: string): Promise<void> {
+    try {
+      await apiClient.delete(`/Question/RemoveSurveyQuestions?Id=${surveyId}`);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to remove questions",
+      );
+    }
+  }
+
+  async removeSingleQuestion(
+    questionId: number,
+    surveyId: string,
+  ): Promise<void> {
+    try {
+      await apiClient.delete(
+        `/Question/RemoveSingleQuestion?Id=${questionId}&SurveyId=${surveyId}`,
+      );
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to remove question",
       );
     }
   }
