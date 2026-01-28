@@ -41,7 +41,8 @@ export default function RegisterPage() {
 
       if (response.success) {
         setSuccess(
-          response.message || "Registration successful! Redirecting to login..."
+          response.message ||
+            "Registration successful! Redirecting to login...",
         );
       } else {
         setError(response.message || "Registration failed");
@@ -53,145 +54,436 @@ export default function RegisterPage() {
     }
   }
 
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "12px 16px",
+    fontSize: "15px",
+    border: "1px solid #e2e8f0",
+    borderRadius: "10px",
+    backgroundColor: "#f8fafc",
+    transition: "all 0.2s ease",
+    outline: "none",
+    boxSizing: "border-box",
+  };
+
+  const labelStyle: React.CSSProperties = {
+    display: "block",
+    fontSize: "14px",
+    fontWeight: 500,
+    color: "#334155",
+    marginBottom: "6px",
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
-        <div>
-          <h2 className="text-3xl font-bold text-center">Create Account</h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Sign up to get started
-          </p>
-        </div>
-
-        {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className="bg-green-50 text-green-600 p-3 rounded-md text-sm">
-            {success}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="nameSurname"
-              className="block text-sm font-medium text-gray-700"
+    <div
+      style={{
+        minHeight: "calc(100vh - 64px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "40px 20px",
+        background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "420px",
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "#ffffff",
+            borderRadius: "16px",
+            boxShadow:
+              "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
+            padding: "40px",
+            border: "1px solid #e2e8f0",
+          }}
+        >
+          <div style={{ textAlign: "center", marginBottom: "32px" }}>
+            <div
+              style={{
+                width: "56px",
+                height: "56px",
+                backgroundColor: "#f0fdf4",
+                borderRadius: "14px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 16px",
+              }}
             >
-              Full Name
-            </label>
-            <input
-              id="nameSurname"
-              name="nameSurname"
-              type="text"
-              required
-              value={formData.nameSurname}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="John Doe"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="userName"
-              className="block text-sm font-medium text-gray-700"
+              <svg
+                width="28"
+                height="28"
+                fill="none"
+                stroke="#16a34a"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                />
+              </svg>
+            </div>
+            <h1
+              style={{
+                fontSize: "26px",
+                fontWeight: 700,
+                color: "#0f172a",
+                margin: "0 0 8px 0",
+              }}
             >
-              Username
-            </label>
-            <input
-              id="userName"
-              name="userName"
-              type="text"
-              required
-              value={formData.userName}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="johndoe"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              Create account
+            </h1>
+            <p
+              style={{
+                fontSize: "15px",
+                color: "#64748b",
+                margin: 0,
+              }}
             >
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="john@example.com"
-            />
+              Join us and start creating surveys
+            </p>
           </div>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+          {error && (
+            <div
+              style={{
+                backgroundColor: "#fef2f2",
+                border: "1px solid #fecaca",
+                color: "#dc2626",
+                padding: "12px 16px",
+                borderRadius: "10px",
+                fontSize: "14px",
+                marginBottom: "24px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
             >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="••••••••"
-            />
-          </div>
+              <svg
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              {error}
+            </div>
+          )}
 
-          <div>
-            <label
-              htmlFor="passwordConfirm"
-              className="block text-sm font-medium text-gray-700"
+          {success && (
+            <div
+              style={{
+                backgroundColor: "#f0fdf4",
+                border: "1px solid #bbf7d0",
+                color: "#16a34a",
+                padding: "12px 16px",
+                borderRadius: "10px",
+                fontSize: "14px",
+                marginBottom: "24px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
             >
-              Confirm Password
-            </label>
-            <input
-              id="passwordConfirm"
-              name="passwordConfirm"
-              type="password"
-              required
-              value={formData.passwordConfirm}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="••••••••"
-            />
-          </div>
+              <svg
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              {success}
+            </div>
+          )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: "16px" }}>
+              <label style={labelStyle}>Full Name</label>
+              <input
+                name="nameSurname"
+                type="text"
+                required
+                value={formData.nameSurname}
+                onChange={handleChange}
+                placeholder="John Doe"
+                style={inputStyle}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#2563eb";
+                  e.target.style.backgroundColor = "#ffffff";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(37, 99, 235, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#e2e8f0";
+                  e.target.style.backgroundColor = "#f8fafc";
+                  e.target.style.boxShadow = "none";
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: "16px" }}>
+              <label style={labelStyle}>Username</label>
+              <input
+                name="userName"
+                type="text"
+                required
+                value={formData.userName}
+                onChange={handleChange}
+                placeholder="johndoe"
+                style={inputStyle}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#2563eb";
+                  e.target.style.backgroundColor = "#ffffff";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(37, 99, 235, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#e2e8f0";
+                  e.target.style.backgroundColor = "#f8fafc";
+                  e.target.style.boxShadow = "none";
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: "16px" }}>
+              <label style={labelStyle}>Email</label>
+              <input
+                name="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="john@example.com"
+                style={inputStyle}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#2563eb";
+                  e.target.style.backgroundColor = "#ffffff";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(37, 99, 235, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#e2e8f0";
+                  e.target.style.backgroundColor = "#f8fafc";
+                  e.target.style.boxShadow = "none";
+                }}
+              />
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "12px",
+                marginBottom: "24px",
+              }}
+            >
+              <div>
+                <label style={labelStyle}>Password</label>
+                <input
+                  name="password"
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  style={inputStyle}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#2563eb";
+                    e.target.style.backgroundColor = "#ffffff";
+                    e.target.style.boxShadow =
+                      "0 0 0 3px rgba(37, 99, 235, 0.1)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "#e2e8f0";
+                    e.target.style.backgroundColor = "#f8fafc";
+                    e.target.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+              <div>
+                <label style={labelStyle}>Confirm</label>
+                <input
+                  name="passwordConfirm"
+                  type="password"
+                  required
+                  value={formData.passwordConfirm}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  style={inputStyle}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#2563eb";
+                    e.target.style.backgroundColor = "#ffffff";
+                    e.target.style.boxShadow =
+                      "0 0 0 3px rgba(37, 99, 235, 0.1)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "#e2e8f0";
+                    e.target.style.backgroundColor = "#f8fafc";
+                    e.target.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: "100%",
+                padding: "12px 24px",
+                fontSize: "15px",
+                fontWeight: 600,
+                color: "#ffffff",
+                backgroundColor: loading ? "#86efac" : "#16a34a",
+                border: "none",
+                borderRadius: "10px",
+                cursor: loading ? "not-allowed" : "pointer",
+                transition: "all 0.2s ease",
+                boxShadow: "0 1px 3px rgba(22, 163, 74, 0.3)",
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.currentTarget.style.backgroundColor = "#15803d";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                  e.currentTarget.style.boxShadow =
+                    "0 4px 12px rgba(22, 163, 74, 0.4)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) {
+                  e.currentTarget.style.backgroundColor = "#16a34a";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow =
+                    "0 1px 3px rgba(22, 163, 74, 0.3)";
+                }
+              }}
+            >
+              {loading ? (
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    style={{ animation: "spin 1s linear infinite" }}
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeOpacity="0.3"
+                    />
+                    <path
+                      d="M12 2a10 10 0 0 1 10 10"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  Creating account...
+                </span>
+              ) : (
+                "Create account"
+              )}
+            </button>
+          </form>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              margin: "28px 0",
+            }}
           >
-            {loading ? "Creating account..." : "Sign up"}
-          </button>
-        </form>
+            <div
+              style={{ flex: 1, height: "1px", backgroundColor: "#e2e8f0" }}
+            />
+            <span
+              style={{ padding: "0 16px", fontSize: "13px", color: "#94a3b8" }}
+            >
+              or
+            </span>
+            <div
+              style={{ flex: 1, height: "1px", backgroundColor: "#e2e8f0" }}
+            />
+          </div>
 
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "14px",
+              color: "#64748b",
+              margin: 0,
+            }}
+          >
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              style={{
+                color: "#2563eb",
+                fontWeight: 500,
+                textDecoration: "none",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.textDecoration = "underline")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.textDecoration = "none")
+              }
             >
               Sign in
             </Link>
           </p>
         </div>
+
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "13px",
+            color: "#94a3b8",
+            marginTop: "24px",
+          }}
+        >
+          By creating an account, you agree to our Terms of Service
+        </p>
       </div>
+
+      <style jsx global>{`
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }

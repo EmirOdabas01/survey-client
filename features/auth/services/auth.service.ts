@@ -45,7 +45,7 @@ class AuthService {
       };
 
       const response = await apiClient.post<RegisterResponse>(
-        "/Auth/Register",
+        "/User/Register",
         payload,
       );
 
