@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { surveyService } from "../services/survey.service";
 import { QuestionType } from "@/shared/types/survey.types";
+import { AddQuestionForm } from "./add-question-form";
 import type { Question } from "@/shared/types/survey.types";
 
 interface SurveyQuestionsProps {
@@ -13,6 +14,7 @@ export function SurveyQuestions({ surveyId }: SurveyQuestionsProps) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   useEffect(() => {
     loadQuestions();
@@ -85,9 +87,11 @@ export function SurveyQuestions({ surveyId }: SurveyQuestionsProps) {
   }
 
   function handleAddQuestion() {
-    alert(
-      "Add question - will be implemented with CreateSurveyQuestions endpoint",
-    );
+    setShowAddForm(true);
+  }
+
+  function handleQuestionAdded() {
+    loadQuestions();
   }
 
   function handleEditQuestion(question: Question) {
@@ -193,6 +197,9 @@ export function SurveyQuestions({ surveyId }: SurveyQuestionsProps) {
       </div>
     );
   }
+
+  const nextOrder =
+    questions.length > 0 ? Math.max(...questions.map((q) => q.order)) + 1 : 1;
 
   return (
     <div>
@@ -447,6 +454,15 @@ export function SurveyQuestions({ surveyId }: SurveyQuestionsProps) {
             </div>
           ))}
         </div>
+      )}
+
+      {showAddForm && (
+        <AddQuestionForm
+          surveyId={surveyId}
+          nextOrder={nextOrder}
+          onClose={() => setShowAddForm(false)}
+          onAdded={handleQuestionAdded}
+        />
       )}
     </div>
   );

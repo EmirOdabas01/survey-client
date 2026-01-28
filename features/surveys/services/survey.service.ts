@@ -12,6 +12,7 @@ import type {
   UserSurveyListResponse,
   UpdateSurveyRequest,
   SuccessResponse,
+  CreateQuestionRequest,
 } from "@/shared/types/survey.types";
 
 class SurveyService {
@@ -237,6 +238,22 @@ class SurveyService {
     } catch (error) {
       throw new Error(
         error instanceof Error ? error.message : "Failed to remove image",
+      );
+    }
+  }
+
+  async createSurveyQuestions(
+    surveyId: string,
+    questions: CreateQuestionRequest[],
+  ): Promise<void> {
+    try {
+      await apiClient.post("/Question/CreateSurveyQuestions", {
+        surveyId,
+        questions,
+      });
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to create questions",
       );
     }
   }

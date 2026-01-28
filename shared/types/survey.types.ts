@@ -125,3 +125,21 @@ export interface UpdateSurveyRequest {
 export interface SuccessResponse {
   success: boolean;
 }
+
+export interface CreateQuestionOptionRequest {
+  order: number;
+  value: string;
+}
+
+export interface CreateQuestionRequest {
+  order: number;
+  questionText: string;
+  isMandatory: boolean;
+  questionType: QuestionType;
+  questionOptions: CreateQuestionOptionRequest[];
+}
+
+export interface CreateSurveyQuestionsRequest {
+  surveyId: string;
+  questions: CreateQuestionRequest[];
+}
