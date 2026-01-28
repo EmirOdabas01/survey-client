@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { surveyService } from "../services/survey.service";
 import { UserSurveyCard } from "./user-survey-card";
 import { CreateSurveyForm } from "./create-survey-form";
@@ -9,6 +10,7 @@ import { UploadImageModal } from "./upload-image-modal";
 import type { UserSurvey } from "@/shared/types/survey.types";
 
 export function UserSurveyList() {
+  const router = useRouter();
   const [surveys, setSurveys] = useState<UserSurvey[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -136,10 +138,9 @@ export function UserSurveyList() {
       alert(error instanceof Error ? error.message : "Failed to remove image");
     }
   }
+
   function handleViewQuestions(surveyId: string) {
-    alert(
-      `View questions for survey: ${surveyId}\n\nEndpoint will be implemented soon.`,
-    );
+    router.push(`/dashboard/surveys/${surveyId}/questions`);
   }
 
   function handleSurveyCreated() {
