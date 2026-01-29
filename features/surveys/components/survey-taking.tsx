@@ -37,9 +37,8 @@ export function SurveyTaking({ surveyId, responseId }: SurveyTakingProps) {
     setError(null);
     try {
       const response = await surveyService.getSurveyQuestions(surveyId);
-
       const sortedQuestions = [...response.questions].sort(
-        (a, b) => a.order - b.order
+        (a, b) => a.order - b.order,
       );
       setQuestions(sortedQuestions);
 
@@ -145,7 +144,7 @@ export function SurveyTaking({ surveyId, responseId }: SurveyTakingProps) {
           }
           if (question.questionOptions.length >= 2) {
             const sortedOptions = [...question.questionOptions].sort(
-              (a, b) => a.order - b.order
+              (a, b) => a.order - b.order,
             );
             const optionId = answer.logicalAnswer
               ? sortedOptions[0].id
@@ -199,43 +198,137 @@ export function SurveyTaking({ surveyId, responseId }: SurveyTakingProps) {
     }
   }
 
+  const answeredCount = questions.filter((q) => {
+    const answer = answers[q.id];
+    if (!answer) return false;
+    switch (q.type) {
+      case QuestionType.Open:
+        return answer.textAnswer.trim() !== "";
+      case QuestionType.Dropdown:
+        return answer.selectedOptionId !== null;
+      case QuestionType.MultipleChoice:
+        return answer.selectedOptionIds.length > 0;
+      case QuestionType.Logical:
+        return answer.logicalAnswer !== null;
+      default:
+        return false;
+    }
+  }).length;
+  const progress =
+    questions.length > 0 ? (answeredCount / questions.length) * 100 : 0;
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading questions...</p>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "400px",
+          backgroundColor: "#ffffff",
+          borderRadius: "16px",
+          border: "1px solid #e2e8f0",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div
+            style={{
+              width: "48px",
+              height: "48px",
+              border: "3px solid #e2e8f0",
+              borderTopColor: "#2563eb",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite",
+              margin: "0 auto",
+            }}
+          />
+          <p style={{ marginTop: "16px", color: "#64748b", fontSize: "15px" }}>
+            Loading questions...
+          </p>
         </div>
+        <style jsx global>{`
+          @keyframes spin {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        `}</style>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="text-red-600 mb-4">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "400px",
+          backgroundColor: "#ffffff",
+          borderRadius: "16px",
+          border: "1px solid #e2e8f0",
+          padding: "48px",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div
+            style={{
+              width: "64px",
+              height: "64px",
+              backgroundColor: "#fef2f2",
+              borderRadius: "16px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 20px",
+            }}
+          >
             <svg
-              className="w-16 h-16 mx-auto"
+              width="32"
+              height="32"
               fill="none"
-              stroke="currentColor"
+              stroke="#dc2626"
               viewBox="0 0 24 24"
+              strokeWidth="1.5"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
           </div>
-          <p className="text-gray-900 font-medium mb-2">
+          <p
+            style={{
+              fontWeight: 600,
+              marginBottom: "8px",
+              color: "#0f172a",
+              fontSize: "17px",
+            }}
+          >
             Failed to load questions
           </p>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <p
+            style={{ color: "#64748b", marginBottom: "24px", fontSize: "15px" }}
+          >
+            {error}
+          </p>
           <button
             onClick={loadQuestions}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            style={{
+              padding: "12px 24px",
+              backgroundColor: "#2563eb",
+              color: "white",
+              borderRadius: "10px",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: 600,
+            }}
           >
             Try Again
           </button>
@@ -245,8 +338,52 @@ export function SurveyTaking({ surveyId, responseId }: SurveyTakingProps) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="space-y-6">
+    <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+      <div
+        style={{
+          backgroundColor: "#ffffff",
+          borderRadius: "12px",
+          padding: "20px 24px",
+          marginBottom: "24px",
+          border: "1px solid #e2e8f0",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "12px",
+          }}
+        >
+          <span style={{ fontSize: "14px", fontWeight: 500, color: "#334155" }}>
+            Progress
+          </span>
+          <span style={{ fontSize: "14px", color: "#64748b" }}>
+            {answeredCount} of {questions.length} answered
+          </span>
+        </div>
+        <div
+          style={{
+            height: "8px",
+            backgroundColor: "#e2e8f0",
+            borderRadius: "4px",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              height: "100%",
+              width: `${progress}%`,
+              backgroundColor: progress === 100 ? "#16a34a" : "#2563eb",
+              borderRadius: "4px",
+              transition: "all 0.3s ease",
+            }}
+          />
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         {questions.map((question, index) => (
           <div key={question.id} id={`question-${question.id}`}>
             <QuestionCard
@@ -262,21 +399,140 @@ export function SurveyTaking({ surveyId, responseId }: SurveyTakingProps) {
         ))}
       </div>
 
-      <div className="mt-8 pb-8">
+      <div
+        style={{
+          marginTop: "32px",
+          paddingBottom: "40px",
+        }}
+      >
+        {Object.keys(errors).length > 0 && (
+          <div
+            style={{
+              backgroundColor: "#fef2f2",
+              borderRadius: "12px",
+              padding: "16px 20px",
+              marginBottom: "20px",
+              border: "1px solid #fecaca",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+            }}
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="#dc2626"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <p style={{ color: "#dc2626", fontSize: "14px", margin: 0 }}>
+              Please answer all required questions before submitting.
+            </p>
+          </div>
+        )}
+
         <button
           onClick={handleSubmit}
           disabled={submitting}
-          className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{
+            width: "100%",
+            padding: "18px 32px",
+            backgroundColor: submitting ? "#93c5fd" : "#2563eb",
+            color: "white",
+            fontSize: "16px",
+            fontWeight: 600,
+            borderRadius: "12px",
+            border: "none",
+            cursor: submitting ? "not-allowed" : "pointer",
+            transition: "all 0.2s ease",
+            boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "10px",
+          }}
+          onMouseEnter={(e) => {
+            if (!submitting) {
+              e.currentTarget.style.backgroundColor = "#1d4ed8";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow =
+                "0 6px 20px rgba(37, 99, 235, 0.4)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!submitting) {
+              e.currentTarget.style.backgroundColor = "#2563eb";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow =
+                "0 4px 14px rgba(37, 99, 235, 0.3)";
+            }
+          }}
         >
-          {submitting ? "Submitting..." : "Submit Answers"}
+          {submitting ? (
+            <>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                style={{ animation: "spin 1s linear infinite" }}
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeOpacity="0.3"
+                />
+                <path
+                  d="M12 2a10 10 0 0 1 10 10"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+              Submitting...
+            </>
+          ) : (
+            <>
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              Submit Answers
+            </>
+          )}
         </button>
-
-        {Object.keys(errors).length > 0 && (
-          <p className="mt-4 text-center text-red-600">
-            Please answer all required questions before submitting.
-          </p>
-        )}
       </div>
+
+      <style jsx global>{`
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }

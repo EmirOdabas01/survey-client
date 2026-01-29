@@ -13,14 +13,49 @@ export default function SurveyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div
+      style={{
+        minHeight: "calc(100vh - 64px)",
+        backgroundColor: "#f8fafc",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "900px",
+          margin: "0 auto",
+          padding: "40px 24px",
+        }}
+      >
         <button
           onClick={handleGoBack}
-          className="mb-6 flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            marginBottom: "24px",
+            color: "#64748b",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: 500,
+            padding: "8px 12px",
+            marginLeft: "-12px",
+            borderRadius: "8px",
+            transition: "all 0.15s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#f1f5f9";
+            e.currentTarget.style.color = "#334155";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "transparent";
+            e.currentTarget.style.color = "#64748b";
+          }}
         >
           <svg
-            className="w-5 h-5 mr-2"
+            width="18"
+            height="18"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -28,7 +63,7 @@ export default function SurveyPage() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
+              strokeWidth="2"
               d="M15 19l-7-7 7-7"
             />
           </svg>
