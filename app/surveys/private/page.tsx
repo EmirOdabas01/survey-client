@@ -11,25 +11,45 @@ export default function PrivateSurveysPage() {
   }
 
   return (
-    <div style={{ padding: "32px", maxWidth: "1200px", margin: "0 auto" }}>
+    <div
+      style={{
+        padding: "40px 24px",
+        maxWidth: "1280px",
+        margin: "0 auto",
+        minHeight: "calc(100vh - 64px)",
+      }}
+    >
       <div style={{ marginBottom: "32px" }}>
         <button
           onClick={() => router.push("/")}
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "8px",
-            marginBottom: "16px",
-            color: "#4b5563",
+            gap: "6px",
+            marginBottom: "20px",
+            color: "#64748b",
             background: "none",
             border: "none",
             cursor: "pointer",
             fontSize: "14px",
+            fontWeight: 500,
+            padding: "8px 12px",
+            marginLeft: "-12px",
+            borderRadius: "8px",
+            transition: "all 0.15s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#f1f5f9";
+            e.currentTarget.style.color = "#334155";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "transparent";
+            e.currentTarget.style.color = "#64748b";
           }}
         >
           <svg
-            width="20"
-            height="20"
+            width="18"
+            height="18"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -37,36 +57,37 @@ export default function PrivateSurveysPage() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
+              strokeWidth="2"
               d="M15 19l-7-7 7-7"
             />
           </svg>
           Back to Home
         </button>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           <div
             style={{
-              width: "48px",
-              height: "48px",
-              backgroundColor: "#f3e8ff",
-              borderRadius: "12px",
+              width: "56px",
+              height: "56px",
+              background: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)",
+              borderRadius: "14px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              boxShadow: "0 4px 12px rgba(139, 92, 246, 0.15)",
             }}
           >
             <svg
-              width="24"
-              height="24"
+              width="28"
+              height="28"
               fill="none"
-              stroke="#a855f7"
+              stroke="#8b5cf6"
               viewBox="0 0 24 24"
+              strokeWidth="2"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
               />
             </svg>
@@ -77,12 +98,12 @@ export default function PrivateSurveysPage() {
                 fontSize: "28px",
                 fontWeight: 700,
                 margin: 0,
-                color: "#111827",
+                color: "#0f172a",
               }}
             >
               Private Surveys
             </h1>
-            <p style={{ color: "#6b7280", marginTop: "4px" }}>
+            <p style={{ color: "#64748b", marginTop: "4px", fontSize: "15px" }}>
               Surveys shared directly with you
             </p>
           </div>
