@@ -99,7 +99,7 @@ export default function DashboardPage() {
             margin: 0,
           }}
         >
-          Here's what you can do from your dashboard
+          Here&apos;s what you can do from your dashboard
         </p>
       </div>
 

@@ -107,6 +107,26 @@ export function AddQuestionForm({
     }
   }
 
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "12px 14px",
+    border: "1px solid #e2e8f0",
+    borderRadius: "10px",
+    fontSize: "14px",
+    boxSizing: "border-box",
+    transition: "all 0.15s ease",
+    backgroundColor: "#ffffff",
+    outline: "none",
+  };
+
+  const labelStyle: React.CSSProperties = {
+    display: "block",
+    fontSize: "14px",
+    fontWeight: 500,
+    marginBottom: "6px",
+    color: "#334155",
+  };
+
   return (
     <>
       <div
@@ -116,7 +136,8 @@ export function AddQuestionForm({
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backgroundColor: "rgba(15, 23, 42, 0.6)",
+          backdropFilter: "blur(4px)",
           zIndex: 9998,
         }}
         onClick={onClose}
@@ -129,8 +150,8 @@ export function AddQuestionForm({
           left: "50%",
           transform: "translate(-50%, -50%)",
           backgroundColor: "white",
-          borderRadius: "8px",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+          borderRadius: "20px",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
           width: "90%",
           maxWidth: "550px",
           maxHeight: "85vh",
@@ -141,164 +162,308 @@ export function AddQuestionForm({
         }}
       >
         <div
-          style={{ padding: "16px 20px", borderBottom: "1px solid #e5e7eb" }}
+          style={{
+            padding: "24px 28px",
+            borderBottom: "1px solid #e2e8f0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h2 style={{ fontSize: "18px", fontWeight: 600, margin: 0 }}>
-              Add New Question
-            </h2>
-            <button
-              onClick={onClose}
+          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            <div
               style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "4px",
+                width: "44px",
+                height: "44px",
+                background: "linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <svg
-                width="20"
-                height="20"
+                width="22"
+                height="22"
                 fill="none"
-                stroke="currentColor"
+                stroke="white"
                 viewBox="0 0 24 24"
+                strokeWidth="2"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
+                  d="M12 4v16m8-8H4"
                 />
               </svg>
-            </button>
+            </div>
+            <div>
+              <h2
+                style={{
+                  fontSize: "18px",
+                  fontWeight: 600,
+                  margin: 0,
+                  color: "#0f172a",
+                }}
+              >
+                Add New Question
+              </h2>
+              <p
+                style={{
+                  fontSize: "13px",
+                  color: "#64748b",
+                  margin: "2px 0 0 0",
+                }}
+              >
+                Question #{nextOrder}
+              </p>
+            </div>
           </div>
+          <button
+            onClick={onClose}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: "8px",
+              borderRadius: "8px",
+              color: "#64748b",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#f1f5f9";
+              e.currentTarget.style.color = "#0f172a";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "transparent";
+              e.currentTarget.style.color = "#64748b";
+            }}
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "24px 28px" }}>
           <form id="add-question-form" onSubmit={handleSubmit}>
             {error && (
               <div
                 style={{
                   backgroundColor: "#fef2f2",
                   color: "#dc2626",
-                  padding: "12px",
-                  borderRadius: "6px",
-                  marginBottom: "16px",
+                  padding: "14px 16px",
+                  borderRadius: "10px",
+                  marginBottom: "20px",
                   fontSize: "14px",
+                  border: "1px solid #fecaca",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
                 }}
               >
+                <svg
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
                 {error}
               </div>
             )}
 
-            <div style={{ marginBottom: "16px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  marginBottom: "4px",
-                }}
-              >
-                Question Text *
+            <div style={{ marginBottom: "20px" }}>
+              <label style={labelStyle}>
+                Question Text <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <textarea
                 value={questionText}
                 onChange={(e) => setQuestionText(e.target.value)}
-                placeholder="Enter your question"
+                placeholder="Enter your question here..."
                 rows={3}
                 style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid #d1d5db",
-                  borderRadius: "6px",
-                  fontSize: "14px",
+                  ...inputStyle,
                   resize: "none",
-                  boxSizing: "border-box",
+                  minHeight: "100px",
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = "#2563eb";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 0 3px rgba(37, 99, 235, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = "#e2e8f0";
+                  e.currentTarget.style.boxShadow = "none";
                 }}
               />
             </div>
 
-            <div style={{ marginBottom: "16px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  marginBottom: "4px",
-                }}
-              >
-                Question Type *
+            <div style={{ marginBottom: "20px" }}>
+              <label style={labelStyle}>
+                Question Type <span style={{ color: "#dc2626" }}>*</span>
               </label>
-              <select
-                value={questionType}
-                onChange={(e) =>
-                  handleTypeChange(Number(e.target.value) as QuestionType)
-                }
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid #d1d5db",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  backgroundColor: "white",
-                  boxSizing: "border-box",
-                }}
-              >
-                <option value={QuestionType.Open}>Open Text</option>
-                <option value={QuestionType.Dropdown}>Dropdown</option>
-                <option value={QuestionType.MultipleChoice}>
-                  Multiple Choice
-                </option>
-                <option value={QuestionType.Logical}>True/False</option>
-              </select>
+              <div style={{ position: "relative" }}>
+                <select
+                  value={questionType}
+                  onChange={(e) =>
+                    handleTypeChange(Number(e.target.value) as QuestionType)
+                  }
+                  style={{
+                    ...inputStyle,
+                    appearance: "none",
+                    cursor: "pointer",
+                    paddingRight: "40px",
+                  }}
+                >
+                  <option value={QuestionType.Open}>
+                    Open Text - Free text response
+                  </option>
+                  <option value={QuestionType.Dropdown}>
+                    Dropdown - Single selection
+                  </option>
+                  <option value={QuestionType.MultipleChoice}>
+                    Multiple Choice - Multiple selections
+                  </option>
+                  <option value={QuestionType.Logical}>
+                    True/False - Binary choice
+                  </option>
+                </select>
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "14px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="#64748b"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
 
-            <div style={{ marginBottom: "16px" }}>
+            <div style={{ marginBottom: "24px" }}>
               <label
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "8px",
+                  gap: "12px",
                   cursor: "pointer",
+                  padding: "14px 16px",
+                  backgroundColor: isMandatory ? "#eff6ff" : "#f8fafc",
+                  borderRadius: "10px",
+                  border: `1px solid ${isMandatory ? "#bfdbfe" : "#e2e8f0"}`,
+                  transition: "all 0.15s ease",
                 }}
               >
+                <div
+                  style={{
+                    width: "44px",
+                    height: "24px",
+                    backgroundColor: isMandatory ? "#2563eb" : "#cbd5e1",
+                    borderRadius: "12px",
+                    position: "relative",
+                    transition: "all 0.2s ease",
+                    flexShrink: 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      backgroundColor: "white",
+                      borderRadius: "50%",
+                      position: "absolute",
+                      top: "2px",
+                      left: isMandatory ? "22px" : "2px",
+                      transition: "all 0.2s ease",
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                    }}
+                  />
+                </div>
                 <input
                   type="checkbox"
                   checked={isMandatory}
                   onChange={(e) => setIsMandatory(e.target.checked)}
-                  style={{ width: "16px", height: "16px" }}
+                  style={{ display: "none" }}
                 />
-                <span style={{ fontSize: "14px" }}>Required question</span>
+                <div>
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: 500,
+                      color: "#0f172a",
+                    }}
+                  >
+                    Required Question
+                  </span>
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      color: "#64748b",
+                      margin: "2px 0 0 0",
+                    }}
+                  >
+                    Users must answer this question
+                  </p>
+                </div>
               </label>
             </div>
 
             {needsOptions && (
               <div style={{ marginBottom: "16px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    marginBottom: "8px",
-                  }}
-                >
-                  Options *
+                <label style={labelStyle}>
+                  Answer Options <span style={{ color: "#dc2626" }}>*</span>
+                  <span
+                    style={{
+                      fontWeight: 400,
+                      color: "#64748b",
+                      marginLeft: "8px",
+                    }}
+                  >
+                    (minimum 2)
+                  </span>
                 </label>
 
                 {options.length > 0 && (
                   <div
                     style={{
-                      marginBottom: "12px",
+                      marginBottom: "16px",
                       display: "flex",
                       flexDirection: "column",
-                      gap: "8px",
+                      gap: "10px",
                     }}
                   >
                     {options.map((option, index) => (
@@ -307,30 +472,37 @@ export function AddQuestionForm({
                         style={{
                           display: "flex",
                           alignItems: "center",
-                          gap: "8px",
-                          padding: "8px 12px",
-                          backgroundColor: "#f3f4f6",
-                          borderRadius: "6px",
+                          gap: "12px",
+                          padding: "12px 14px",
+                          backgroundColor: "#f8fafc",
+                          borderRadius: "10px",
+                          border: "1px solid #e2e8f0",
                         }}
                       >
                         <span
                           style={{
-                            width: "24px",
-                            height: "24px",
+                            width: "28px",
+                            height: "28px",
                             backgroundColor: "#2563eb",
                             color: "white",
-                            borderRadius: "50%",
+                            borderRadius: "8px",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: "12px",
+                            fontSize: "13px",
                             fontWeight: 600,
                             flexShrink: 0,
                           }}
                         >
                           {option.order}
                         </span>
-                        <span style={{ flex: 1, fontSize: "14px" }}>
+                        <span
+                          style={{
+                            flex: 1,
+                            fontSize: "14px",
+                            color: "#0f172a",
+                          }}
+                        >
                           {option.value}
                         </span>
                         {questionType !== QuestionType.Logical && (
@@ -342,12 +514,25 @@ export function AddQuestionForm({
                               border: "none",
                               cursor: "pointer",
                               color: "#dc2626",
-                              padding: "4px",
+                              padding: "6px",
+                              borderRadius: "6px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              transition: "all 0.15s ease",
                             }}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.backgroundColor =
+                                "#fef2f2")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.backgroundColor =
+                                "transparent")
+                            }
                           >
                             <svg
-                              width="16"
-                              height="16"
+                              width="18"
+                              height="18"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -367,12 +552,12 @@ export function AddQuestionForm({
                 )}
 
                 {questionType !== QuestionType.Logical && (
-                  <div style={{ display: "flex", gap: "8px" }}>
+                  <div style={{ display: "flex", gap: "10px" }}>
                     <input
                       type="text"
                       value={newOptionValue}
                       onChange={(e) => setNewOptionValue(e.target.value)}
-                      placeholder="Enter option value"
+                      placeholder="Type an option and press Enter or click Add"
                       onKeyPress={(e) => {
                         if (e.key === "Enter") {
                           e.preventDefault();
@@ -380,31 +565,72 @@ export function AddQuestionForm({
                         }
                       }}
                       style={{
+                        ...inputStyle,
                         flex: 1,
-                        padding: "8px 12px",
-                        border: "1px solid #d1d5db",
-                        borderRadius: "6px",
-                        fontSize: "14px",
-                        boxSizing: "border-box",
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = "#2563eb";
+                        e.currentTarget.style.boxShadow =
+                          "0 0 0 3px rgba(37, 99, 235, 0.1)";
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = "#e2e8f0";
+                        e.currentTarget.style.boxShadow = "none";
                       }}
                     />
                     <button
                       type="button"
                       onClick={handleAddOption}
+                      disabled={!newOptionValue.trim()}
                       style={{
-                        padding: "8px 16px",
-                        backgroundColor: "#2563eb",
+                        padding: "12px 20px",
+                        backgroundColor: newOptionValue.trim()
+                          ? "#2563eb"
+                          : "#94a3b8",
                         color: "white",
-                        borderRadius: "6px",
+                        borderRadius: "10px",
                         border: "none",
-                        cursor: "pointer",
+                        cursor: newOptionValue.trim()
+                          ? "pointer"
+                          : "not-allowed",
                         fontSize: "14px",
                         fontWeight: 500,
+                        transition: "all 0.15s ease",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
                       }}
                     >
+                      <svg
+                        width="16"
+                        height="16"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
                       Add
                     </button>
                   </div>
+                )}
+
+                {questionType === QuestionType.Logical && (
+                  <p
+                    style={{
+                      fontSize: "13px",
+                      color: "#64748b",
+                      fontStyle: "italic",
+                      marginTop: "8px",
+                    }}
+                  >
+                    True/False options are automatically set
+                  </p>
                 )}
               </div>
             )}
@@ -413,10 +639,11 @@ export function AddQuestionForm({
 
         <div
           style={{
-            padding: "16px 20px",
-            borderTop: "1px solid #e5e7eb",
+            padding: "20px 28px",
+            borderTop: "1px solid #e2e8f0",
             display: "flex",
             gap: "12px",
+            backgroundColor: "#f8fafc",
           }}
         >
           <button
@@ -424,13 +651,23 @@ export function AddQuestionForm({
             onClick={onClose}
             style={{
               flex: 1,
-              padding: "10px 16px",
-              border: "1px solid #d1d5db",
-              borderRadius: "6px",
-              backgroundColor: "white",
+              padding: "12px 20px",
+              border: "1px solid #e2e8f0",
+              borderRadius: "10px",
+              backgroundColor: "#ffffff",
               fontSize: "14px",
               fontWeight: 500,
               cursor: "pointer",
+              color: "#334155",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#f1f5f9";
+              e.currentTarget.style.borderColor = "#cbd5e1";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#ffffff";
+              e.currentTarget.style.borderColor = "#e2e8f0";
             }}
           >
             Cancel
@@ -441,20 +678,82 @@ export function AddQuestionForm({
             disabled={loading}
             style={{
               flex: 1,
-              padding: "10px 16px",
+              padding: "12px 20px",
               border: "none",
-              borderRadius: "6px",
+              borderRadius: "10px",
               backgroundColor: loading ? "#93c5fd" : "#2563eb",
               color: "white",
               fontSize: "14px",
-              fontWeight: 500,
+              fontWeight: 600,
               cursor: loading ? "not-allowed" : "pointer",
+              transition: "all 0.15s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+            }}
+            onMouseEnter={(e) => {
+              if (!loading) e.currentTarget.style.backgroundColor = "#1d4ed8";
+            }}
+            onMouseLeave={(e) => {
+              if (!loading) e.currentTarget.style.backgroundColor = "#2563eb";
             }}
           >
-            {loading ? "Adding..." : "Add Question"}
+            {loading ? (
+              <>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  style={{ animation: "spin 1s linear infinite" }}
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeOpacity="0.3"
+                  />
+                  <path
+                    d="M12 2a10 10 0 0 1 10 10"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                Adding...
+              </>
+            ) : (
+              <>
+                <svg
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Add Question
+              </>
+            )}
           </button>
         </div>
       </div>
+
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </>
   );
 }

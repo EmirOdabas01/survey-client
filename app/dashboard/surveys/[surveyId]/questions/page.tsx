@@ -13,19 +13,38 @@ export default function SurveyQuestionsPage() {
   }
 
   return (
-    <div className="p-8">
+    <div
+      style={{
+        padding: "32px 40px",
+        minHeight: "100vh",
+        backgroundColor: "#f8fafc",
+      }}
+    >
       <button
         onClick={handleBack}
         style={{
           display: "flex",
           alignItems: "center",
           gap: "8px",
-          marginBottom: "24px",
-          color: "#4b5563",
+          marginBottom: "28px",
+          color: "#64748b",
           background: "none",
           border: "none",
           cursor: "pointer",
           fontSize: "14px",
+          fontWeight: 500,
+          padding: "8px 12px",
+          borderRadius: "8px",
+          transition: "all 0.15s ease",
+          marginLeft: "-12px",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = "#e2e8f0";
+          e.currentTarget.style.color = "#0f172a";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = "transparent";
+          e.currentTarget.style.color = "#64748b";
         }}
       >
         <svg

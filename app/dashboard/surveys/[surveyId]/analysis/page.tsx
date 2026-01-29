@@ -45,7 +45,6 @@ export default function SurveyAnalysisPage() {
         Back to Surveys
       </button>
 
-      {/* Analysis Component */}
       <SurveyAnalysis surveyId={surveyId} />
     </div>
   );
