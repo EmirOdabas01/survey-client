@@ -111,9 +111,28 @@ export function CreateSurveyForm({
     }
   }
 
+  const inputStyle = (hasError: boolean): React.CSSProperties => ({
+    width: "100%",
+    padding: "12px 14px",
+    border: `1px solid ${hasError ? "#fca5a5" : "#e2e8f0"}`,
+    borderRadius: "10px",
+    fontSize: "14px",
+    boxSizing: "border-box",
+    transition: "all 0.15s ease",
+    backgroundColor: hasError ? "#fef2f2" : "#ffffff",
+    outline: "none",
+  });
+
+  const labelStyle: React.CSSProperties = {
+    display: "block",
+    fontSize: "14px",
+    fontWeight: 500,
+    marginBottom: "6px",
+    color: "#334155",
+  };
+
   return (
     <>
-      {/* Backdrop */}
       <div
         style={{
           position: "fixed",
@@ -121,13 +140,13 @@ export function CreateSurveyForm({
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backgroundColor: "rgba(15, 23, 42, 0.6)",
+          backdropFilter: "blur(4px)",
           zIndex: 9998,
         }}
         onClick={onClose}
       />
 
-      {/* Modal */}
       <div
         style={{
           position: "fixed",
@@ -135,101 +154,168 @@ export function CreateSurveyForm({
           left: "50%",
           transform: "translate(-50%, -50%)",
           backgroundColor: "white",
-          borderRadius: "8px",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+          borderRadius: "20px",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
           width: "90%",
-          maxWidth: "500px",
-          maxHeight: "80vh",
+          maxWidth: "520px",
+          maxHeight: "85vh",
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
           zIndex: 9999,
         }}
       >
-        {/* Header */}
         <div
-          style={{ padding: "16px 20px", borderBottom: "1px solid #e5e7eb" }}
+          style={{
+            padding: "24px 28px",
+            borderBottom: "1px solid #e2e8f0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h2 style={{ fontSize: "18px", fontWeight: 600, margin: 0 }}>
-              Create New Survey
-            </h2>
-            <button
-              onClick={onClose}
+          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            <div
               style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "4px",
+                width: "44px",
+                height: "44px",
+                backgroundColor: "#eff6ff",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <svg
-                width="20"
-                height="20"
+                width="22"
+                height="22"
                 fill="none"
-                stroke="currentColor"
+                stroke="#2563eb"
                 viewBox="0 0 24 24"
+                strokeWidth="2"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
+                  d="M12 4v16m8-8H4"
                 />
               </svg>
-            </button>
+            </div>
+            <div>
+              <h2
+                style={{
+                  fontSize: "18px",
+                  fontWeight: 600,
+                  margin: 0,
+                  color: "#0f172a",
+                }}
+              >
+                Create New Survey
+              </h2>
+              <p
+                style={{
+                  fontSize: "13px",
+                  color: "#64748b",
+                  margin: "2px 0 0 0",
+                }}
+              >
+                Fill in the details below
+              </p>
+            </div>
           </div>
+          <button
+            onClick={onClose}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: "8px",
+              borderRadius: "8px",
+              color: "#64748b",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#f1f5f9";
+              e.currentTarget.style.color = "#0f172a";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "transparent";
+              e.currentTarget.style.color = "#64748b";
+            }}
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
 
-        {/* Scrollable Form Content */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "24px 28px" }}>
           <form id="create-survey-form" onSubmit={handleSubmit}>
             {error && (
               <div
                 style={{
                   backgroundColor: "#fef2f2",
                   color: "#dc2626",
-                  padding: "12px",
-                  borderRadius: "6px",
-                  marginBottom: "16px",
+                  padding: "14px 16px",
+                  borderRadius: "10px",
+                  marginBottom: "20px",
                   fontSize: "14px",
+                  border: "1px solid #fecaca",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
                 }}
               >
+                <svg
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
                 {error}
               </div>
             )}
 
-            {/* Name */}
-            <div style={{ marginBottom: "16px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  marginBottom: "4px",
-                }}
-              >
-                Survey Name *
+            <div style={{ marginBottom: "20px" }}>
+              <label style={labelStyle}>
+                Survey Name <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <input
                 name="name"
                 type="text"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="5-20 characters"
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: `1px solid ${getFieldError("name") ? "#dc2626" : "#d1d5db"}`,
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  boxSizing: "border-box",
+                placeholder="Enter survey name (5-20 characters)"
+                style={inputStyle(!!getFieldError("name"))}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = "#2563eb";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 0 3px rgba(37, 99, 235, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = getFieldError("name")
+                    ? "#fca5a5"
+                    : "#e2e8f0";
+                  e.currentTarget.style.boxShadow = "none";
                 }}
               />
               {getFieldError("name") && (
@@ -237,7 +323,8 @@ export function CreateSurveyForm({
                   style={{
                     color: "#dc2626",
                     fontSize: "12px",
-                    marginTop: "4px",
+                    marginTop: "6px",
+                    margin: "6px 0 0 0",
                   }}
                 >
                   {getFieldError("name")}
@@ -245,32 +332,32 @@ export function CreateSurveyForm({
               )}
             </div>
 
-            {/* Description */}
-            <div style={{ marginBottom: "16px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  marginBottom: "4px",
-                }}
-              >
-                Description *
+            <div style={{ marginBottom: "20px" }}>
+              <label style={labelStyle}>
+                Description <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                placeholder="10-100 characters"
-                rows={2}
+                placeholder="Describe your survey (10-100 characters)"
+                rows={3}
                 style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: `1px solid ${getFieldError("description") ? "#dc2626" : "#d1d5db"}`,
-                  borderRadius: "6px",
-                  fontSize: "14px",
+                  ...inputStyle(!!getFieldError("description")),
                   resize: "none",
-                  boxSizing: "border-box",
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = "#2563eb";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 0 3px rgba(37, 99, 235, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = getFieldError(
+                    "description",
+                  )
+                    ? "#fca5a5"
+                    : "#e2e8f0";
+                  e.currentTarget.style.boxShadow = "none";
                 }}
               />
               {getFieldError("description") && (
@@ -278,7 +365,7 @@ export function CreateSurveyForm({
                   style={{
                     color: "#dc2626",
                     fontSize: "12px",
-                    marginTop: "4px",
+                    margin: "6px 0 0 0",
                   }}
                 >
                   {getFieldError("description")}
@@ -286,78 +373,84 @@ export function CreateSurveyForm({
               )}
             </div>
 
-            {/* Visibility */}
-            <div style={{ marginBottom: "16px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  marginBottom: "4px",
-                }}
-              >
-                Visibility *
+            <div style={{ marginBottom: "20px" }}>
+              <label style={labelStyle}>
+                Visibility <span style={{ color: "#dc2626" }}>*</span>
               </label>
-              <select
-                name="visibility"
-                value={formData.visibility}
-                onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid #d1d5db",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  backgroundColor: "white",
-                  boxSizing: "border-box",
-                }}
-              >
-                <option value={SurveyVisibility.Public}>Public</option>
-                <option value={SurveyVisibility.Group}>Group</option>
-                <option value={SurveyVisibility.Private}>Private</option>
-              </select>
+              <div style={{ position: "relative" }}>
+                <select
+                  name="visibility"
+                  value={formData.visibility}
+                  onChange={handleChange}
+                  style={{
+                    ...inputStyle(false),
+                    appearance: "none",
+                    cursor: "pointer",
+                    paddingRight: "40px",
+                  }}
+                >
+                  <option value={SurveyVisibility.Public}>
+                    Public - Visible to everyone
+                  </option>
+                  <option value={SurveyVisibility.Group}>
+                    Group - Visible to group members
+                  </option>
+                  <option value={SurveyVisibility.Private}>
+                    Private - Invite only
+                  </option>
+                </select>
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "14px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="#64748b"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
 
-            {/* Dates Row */}
             <div
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
-                gap: "12px",
-                marginBottom: "16px",
+                gap: "16px",
+                marginBottom: "20px",
               }}
             >
               <div>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    marginBottom: "4px",
-                  }}
-                >
-                  Start Date *
+                <label style={labelStyle}>
+                  Start Date <span style={{ color: "#dc2626" }}>*</span>
                 </label>
                 <input
                   name="startDate"
                   type="datetime-local"
                   value={formData.startDate}
                   onChange={handleChange}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    border: `1px solid ${getFieldError("startdate") ? "#dc2626" : "#d1d5db"}`,
-                    borderRadius: "6px",
-                    fontSize: "14px",
-                    boxSizing: "border-box",
-                  }}
+                  style={inputStyle(!!getFieldError("startdate"))}
                 />
                 {getFieldError("startdate") && (
                   <p
                     style={{
                       color: "#dc2626",
                       fontSize: "12px",
-                      marginTop: "4px",
+                      margin: "6px 0 0 0",
                     }}
                   >
                     {getFieldError("startdate")}
@@ -365,36 +458,20 @@ export function CreateSurveyForm({
                 )}
               </div>
               <div>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    marginBottom: "4px",
-                  }}
-                >
-                  End Date
-                </label>
+                <label style={labelStyle}>End Date</label>
                 <input
                   name="endDate"
                   type="datetime-local"
                   value={formData.endDate}
                   onChange={handleChange}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    border: `1px solid ${getFieldError("enddate") ? "#dc2626" : "#d1d5db"}`,
-                    borderRadius: "6px",
-                    fontSize: "14px",
-                    boxSizing: "border-box",
-                  }}
+                  style={inputStyle(!!getFieldError("enddate"))}
                 />
                 {getFieldError("enddate") && (
                   <p
                     style={{
                       color: "#dc2626",
                       fontSize: "12px",
-                      marginTop: "4px",
+                      margin: "6px 0 0 0",
                     }}
                   >
                     {getFieldError("enddate")}
@@ -403,24 +480,16 @@ export function CreateSurveyForm({
               </div>
             </div>
 
-            {/* Response Limits Row */}
             <div
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
-                gap: "12px",
+                gap: "16px",
               }}
             >
               <div>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    marginBottom: "4px",
-                  }}
-                >
-                  Min Responses *
+                <label style={labelStyle}>
+                  Min Responses <span style={{ color: "#dc2626" }}>*</span>
                 </label>
                 <input
                   name="minResponse"
@@ -428,21 +497,14 @@ export function CreateSurveyForm({
                   min="1"
                   value={formData.minResponse}
                   onChange={handleChange}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    border: `1px solid ${getFieldError("minresponse") ? "#dc2626" : "#d1d5db"}`,
-                    borderRadius: "6px",
-                    fontSize: "14px",
-                    boxSizing: "border-box",
-                  }}
+                  style={inputStyle(!!getFieldError("minresponse"))}
                 />
                 {getFieldError("minresponse") && (
                   <p
                     style={{
                       color: "#dc2626",
                       fontSize: "12px",
-                      marginTop: "4px",
+                      margin: "6px 0 0 0",
                     }}
                   >
                     {getFieldError("minresponse")}
@@ -450,15 +512,8 @@ export function CreateSurveyForm({
                 )}
               </div>
               <div>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    marginBottom: "4px",
-                  }}
-                >
-                  Max Responses *
+                <label style={labelStyle}>
+                  Max Responses <span style={{ color: "#dc2626" }}>*</span>
                 </label>
                 <input
                   name="maxResponse"
@@ -466,21 +521,14 @@ export function CreateSurveyForm({
                   min="1"
                   value={formData.maxResponse}
                   onChange={handleChange}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    border: `1px solid ${getFieldError("maxresponse") ? "#dc2626" : "#d1d5db"}`,
-                    borderRadius: "6px",
-                    fontSize: "14px",
-                    boxSizing: "border-box",
-                  }}
+                  style={inputStyle(!!getFieldError("maxresponse"))}
                 />
                 {getFieldError("maxresponse") && (
                   <p
                     style={{
                       color: "#dc2626",
                       fontSize: "12px",
-                      marginTop: "4px",
+                      margin: "6px 0 0 0",
                     }}
                   >
                     {getFieldError("maxresponse")}
@@ -491,13 +539,13 @@ export function CreateSurveyForm({
           </form>
         </div>
 
-        {/* Footer - Fixed at bottom */}
         <div
           style={{
-            padding: "16px 20px",
-            borderTop: "1px solid #e5e7eb",
+            padding: "20px 28px",
+            borderTop: "1px solid #e2e8f0",
             display: "flex",
             gap: "12px",
+            backgroundColor: "#f8fafc",
           }}
         >
           <button
@@ -505,13 +553,23 @@ export function CreateSurveyForm({
             onClick={onClose}
             style={{
               flex: 1,
-              padding: "10px 16px",
-              border: "1px solid #d1d5db",
-              borderRadius: "6px",
-              backgroundColor: "white",
+              padding: "12px 20px",
+              border: "1px solid #e2e8f0",
+              borderRadius: "10px",
+              backgroundColor: "#ffffff",
               fontSize: "14px",
               fontWeight: 500,
               cursor: "pointer",
+              color: "#334155",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#f1f5f9";
+              e.currentTarget.style.borderColor = "#cbd5e1";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#ffffff";
+              e.currentTarget.style.borderColor = "#e2e8f0";
             }}
           >
             Cancel
@@ -522,20 +580,86 @@ export function CreateSurveyForm({
             disabled={loading}
             style={{
               flex: 1,
-              padding: "10px 16px",
+              padding: "12px 20px",
               border: "none",
-              borderRadius: "6px",
+              borderRadius: "10px",
               backgroundColor: loading ? "#93c5fd" : "#2563eb",
               color: "white",
               fontSize: "14px",
-              fontWeight: 500,
+              fontWeight: 600,
               cursor: loading ? "not-allowed" : "pointer",
+              transition: "all 0.15s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+            }}
+            onMouseEnter={(e) => {
+              if (!loading) e.currentTarget.style.backgroundColor = "#1d4ed8";
+            }}
+            onMouseLeave={(e) => {
+              if (!loading) e.currentTarget.style.backgroundColor = "#2563eb";
             }}
           >
-            {loading ? "Creating..." : "Create Survey"}
+            {loading ? (
+              <>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  style={{ animation: "spin 1s linear infinite" }}
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeOpacity="0.3"
+                  />
+                  <path
+                    d="M12 2a10 10 0 0 1 10 10"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                Creating...
+              </>
+            ) : (
+              <>
+                <svg
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Create Survey
+              </>
+            )}
           </button>
         </div>
       </div>
+
+      <style jsx global>{`
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </>
   );
 }
