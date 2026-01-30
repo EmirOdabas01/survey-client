@@ -140,8 +140,8 @@ export function UserSurveyList() {
         <div style={{ textAlign: "center" }}>
           <div
             style={{
-              width: "48px",
-              height: "48px",
+              width: "52px",
+              height: "52px",
               border: "3px solid #e2e8f0",
               borderTopColor: "#2563eb",
               borderRadius: "50%",
@@ -149,7 +149,7 @@ export function UserSurveyList() {
               margin: "0 auto",
             }}
           />
-          <p style={{ marginTop: "16px", color: "#64748b", fontSize: "15px" }}>
+          <p style={{ marginTop: "20px", color: "#64748b", fontSize: "15px" }}>
             Loading your surveys...
           </p>
         </div>
@@ -177,7 +177,17 @@ export function UserSurveyList() {
           minHeight: "400px",
         }}
       >
-        <div style={{ textAlign: "center" }}>
+        <div
+          style={{
+            textAlign: "center",
+            backgroundColor: "white",
+            padding: "48px",
+            borderRadius: "16px",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+            border: "1px solid #e2e8f0",
+            maxWidth: "400px",
+          }}
+        >
           <div
             style={{
               width: "64px",
@@ -231,7 +241,14 @@ export function UserSurveyList() {
               cursor: "pointer",
               fontSize: "14px",
               fontWeight: 600,
+              transition: "all 0.15s ease",
             }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#1d4ed8")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "#2563eb")
+            }
           >
             Try Again
           </button>
@@ -245,25 +262,55 @@ export function UserSurveyList() {
       <div
         style={{
           display: "flex",
-          alignItems: "center",
+          alignItems: "flex-start",
           justifyContent: "space-between",
           marginBottom: "32px",
         }}
       >
-        <div>
-          <h1
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div
             style={{
-              fontSize: "28px",
-              fontWeight: 700,
-              color: "#0f172a",
-              margin: "0 0 4px 0",
+              width: "52px",
+              height: "52px",
+              background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+              borderRadius: "14px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)",
             }}
           >
-            My Surveys
-          </h1>
-          <p style={{ color: "#64748b", margin: 0, fontSize: "15px" }}>
-            {surveys.length} {surveys.length === 1 ? "survey" : "surveys"} total
-          </p>
+            <svg
+              width="26"
+              height="26"
+              fill="none"
+              stroke="white"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <div>
+            <h1
+              style={{
+                fontSize: "26px",
+                fontWeight: 700,
+                color: "#0f172a",
+                margin: "0 0 4px 0",
+              }}
+            >
+              My Surveys
+            </h1>
+            <p style={{ color: "#64748b", margin: 0, fontSize: "14px" }}>
+              {surveys.length} {surveys.length === 1 ? "survey" : "surveys"}{" "}
+              total
+            </p>
+          </div>
         </div>
         <button
           onClick={() => setShowCreateForm(true)}
@@ -280,7 +327,7 @@ export function UserSurveyList() {
             alignItems: "center",
             gap: "8px",
             transition: "all 0.15s ease",
-            boxShadow: "0 1px 3px rgba(37, 99, 235, 0.3)",
+            boxShadow: "0 4px 14px rgba(37, 99, 235, 0.25)",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = "#1d4ed8";
@@ -317,14 +364,15 @@ export function UserSurveyList() {
             padding: "64px 32px",
             textAlign: "center",
             border: "1px solid #e2e8f0",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
           }}
         >
           <div
             style={{
-              width: "72px",
-              height: "72px",
-              backgroundColor: "#f1f5f9",
-              borderRadius: "18px",
+              width: "80px",
+              height: "80px",
+              backgroundColor: "#eff6ff",
+              borderRadius: "20px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -332,10 +380,10 @@ export function UserSurveyList() {
             }}
           >
             <svg
-              width="36"
-              height="36"
+              width="40"
+              height="40"
               fill="none"
-              stroke="#94a3b8"
+              stroke="#2563eb"
               viewBox="0 0 24 24"
               strokeWidth="1.5"
             >
@@ -361,9 +409,11 @@ export function UserSurveyList() {
               color: "#64748b",
               marginBottom: "24px",
               fontSize: "15px",
+              maxWidth: "300px",
+              margin: "0 auto 24px",
             }}
           >
-            Create your first survey to get started
+            Create your first survey to start collecting responses
           </p>
           <button
             onClick={() => setShowCreateForm(true)}
@@ -376,8 +426,35 @@ export function UserSurveyList() {
               cursor: "pointer",
               fontSize: "14px",
               fontWeight: 600,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              boxShadow: "0 4px 14px rgba(37, 99, 235, 0.25)",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#1d4ed8";
+              e.currentTarget.style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#2563eb";
+              e.currentTarget.style.transform = "translateY(0)";
             }}
           >
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
             Create Your First Survey
           </button>
         </div>

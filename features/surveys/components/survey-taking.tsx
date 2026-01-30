@@ -70,30 +70,29 @@ export function SurveyTaking({ surveyId, responseId }: SurveyTakingProps) {
     }
   }
 
+  function isQuestionAnswered(question: Question): boolean {
+    const answer = answers[question.id];
+    if (!answer) return false;
+    switch (question.type) {
+      case QuestionType.Open:
+        return answer.textAnswer.trim() !== "";
+      case QuestionType.Dropdown:
+        return answer.selectedOptionId !== null;
+      case QuestionType.MultipleChoice:
+        return answer.selectedOptionIds.length > 0;
+      case QuestionType.Logical:
+        return answer.logicalAnswer !== null;
+      default:
+        return false;
+    }
+  }
+
   function validateAnswers(): boolean {
     const newErrors: Record<number, string> = {};
 
     questions.forEach((question) => {
       if (question.isMandatory) {
-        const answer = answers[question.id];
-        let isAnswered = false;
-
-        switch (question.type) {
-          case QuestionType.Open:
-            isAnswered = answer.textAnswer.trim() !== "";
-            break;
-          case QuestionType.Dropdown:
-            isAnswered = answer.selectedOptionId !== null;
-            break;
-          case QuestionType.MultipleChoice:
-            isAnswered = answer.selectedOptionIds.length > 0;
-            break;
-          case QuestionType.Logical:
-            isAnswered = answer.logicalAnswer !== null;
-            break;
-        }
-
-        if (!isAnswered) {
+        if (!isQuestionAnswered(question)) {
           newErrors[question.id] = "This question is required";
         }
       }
@@ -198,22 +197,12 @@ export function SurveyTaking({ surveyId, responseId }: SurveyTakingProps) {
     }
   }
 
-  const answeredCount = questions.filter((q) => {
-    const answer = answers[q.id];
-    if (!answer) return false;
-    switch (q.type) {
-      case QuestionType.Open:
-        return answer.textAnswer.trim() !== "";
-      case QuestionType.Dropdown:
-        return answer.selectedOptionId !== null;
-      case QuestionType.MultipleChoice:
-        return answer.selectedOptionIds.length > 0;
-      case QuestionType.Logical:
-        return answer.logicalAnswer !== null;
-      default:
-        return false;
-    }
-  }).length;
+  function scrollToQuestion(questionId: number) {
+    const element = document.getElementById(`question-${questionId}`);
+    element?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  const answeredCount = questions.filter((q) => isQuestionAnswered(q)).length;
   const progress =
     questions.length > 0 ? (answeredCount / questions.length) * 100 : 0;
 
@@ -338,189 +327,333 @@ export function SurveyTaking({ surveyId, responseId }: SurveyTakingProps) {
   }
 
   return (
-    <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+    <div style={{ position: "relative" }}>
       <div
         style={{
-          backgroundColor: "#ffffff",
-          borderRadius: "12px",
-          padding: "20px 24px",
-          marginBottom: "24px",
-          border: "1px solid #e2e8f0",
+          position: "fixed",
+          left: "24px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          zIndex: 100,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "8px",
         }}
       >
         <div
           style={{
+            backgroundColor: "#ffffff",
+            borderRadius: "16px",
+            padding: "16px 12px",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #e2e8f0",
             display: "flex",
-            justifyContent: "space-between",
+            flexDirection: "column",
             alignItems: "center",
-            marginBottom: "12px",
-          }}
-        >
-          <span style={{ fontSize: "14px", fontWeight: 500, color: "#334155" }}>
-            Progress
-          </span>
-          <span style={{ fontSize: "14px", color: "#64748b" }}>
-            {answeredCount} of {questions.length} answered
-          </span>
-        </div>
-        <div
-          style={{
-            height: "8px",
-            backgroundColor: "#e2e8f0",
-            borderRadius: "4px",
-            overflow: "hidden",
+            gap: "12px",
+            maxHeight: "70vh",
+            overflowY: "auto",
           }}
         >
           <div
             style={{
-              height: "100%",
-              width: `${progress}%`,
-              backgroundColor: progress === 100 ? "#16a34a" : "#2563eb",
-              borderRadius: "4px",
-              transition: "all 0.3s ease",
-            }}
-          />
-        </div>
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-        {questions.map((question, index) => (
-          <div key={question.id} id={`question-${question.id}`}>
-            <QuestionCard
-              question={question}
-              questionNumber={index + 1}
-              answer={answers[question.id]}
-              onAnswerChange={(answer) =>
-                handleAnswerChange(question.id, answer)
-              }
-              error={errors[question.id]}
-            />
-          </div>
-        ))}
-      </div>
-
-      <div
-        style={{
-          marginTop: "32px",
-          paddingBottom: "40px",
-        }}
-      >
-        {Object.keys(errors).length > 0 && (
-          <div
-            style={{
-              backgroundColor: "#fef2f2",
-              borderRadius: "12px",
-              padding: "16px 20px",
-              marginBottom: "20px",
-              border: "1px solid #fecaca",
+              width: "48px",
+              height: "48px",
+              borderRadius: "50%",
+              background:
+                progress === 100
+                  ? "linear-gradient(135deg, #16a34a 0%, #15803d 100%)"
+                  : "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
               display: "flex",
               alignItems: "center",
-              gap: "12px",
+              justifyContent: "center",
+              boxShadow:
+                progress === 100
+                  ? "0 4px 12px rgba(22, 163, 74, 0.3)"
+                  : "0 4px 12px rgba(37, 99, 235, 0.3)",
             }}
           >
-            <svg
-              width="20"
-              height="20"
-              fill="none"
-              stroke="#dc2626"
-              viewBox="0 0 24 24"
+            <span
+              style={{
+                color: "white",
+                fontSize: "12px",
+                fontWeight: 700,
+              }}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p style={{ color: "#dc2626", fontSize: "14px", margin: 0 }}>
-              Please answer all required questions before submitting.
+              {Math.round(progress)}%
+            </span>
+          </div>
+
+          <div
+            style={{
+              width: "4px",
+              height: "120px",
+              backgroundColor: "#e2e8f0",
+              borderRadius: "2px",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "100%",
+                height: `${progress}%`,
+                backgroundColor: progress === 100 ? "#16a34a" : "#2563eb",
+                borderRadius: "2px",
+                transition: "height 0.3s ease",
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              alignItems: "center",
+            }}
+          >
+            {questions.map((question, index) => {
+              const isAnswered = isQuestionAnswered(question);
+              const hasError = !!errors[question.id];
+
+              return (
+                <button
+                  key={question.id}
+                  onClick={() => scrollToQuestion(question.id)}
+                  title={`Question ${index + 1}${question.isMandatory ? " (Required)" : ""}`}
+                  style={{
+                    width: "28px",
+                    height: "28px",
+                    borderRadius: "50%",
+                    border: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    transition: "all 0.2s ease",
+                    backgroundColor: hasError
+                      ? "#fef2f2"
+                      : isAnswered
+                        ? "#dcfce7"
+                        : "#f1f5f9",
+                    color: hasError
+                      ? "#dc2626"
+                      : isAnswered
+                        ? "#16a34a"
+                        : "#64748b",
+                    boxShadow: hasError
+                      ? "0 0 0 2px #fecaca"
+                      : isAnswered
+                        ? "0 0 0 2px #86efac"
+                        : "none",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "scale(1.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
+                >
+                  {isAnswered ? (
+                    <svg
+                      width="14"
+                      height="14"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      strokeWidth="3"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  ) : (
+                    index + 1
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            style={{
+              textAlign: "center",
+              paddingTop: "8px",
+              borderTop: "1px solid #e2e8f0",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "11px",
+                color: "#64748b",
+                margin: 0,
+                fontWeight: 500,
+              }}
+            >
+              {answeredCount}/{questions.length}
+            </p>
+            <p
+              style={{
+                fontSize: "10px",
+                color: "#94a3b8",
+                margin: "2px 0 0 0",
+              }}
+            >
+              answered
             </p>
           </div>
-        )}
+        </div>
+      </div>
 
-        <button
-          onClick={handleSubmit}
-          disabled={submitting}
+      <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          {questions.map((question, index) => (
+            <div key={question.id} id={`question-${question.id}`}>
+              <QuestionCard
+                question={question}
+                questionNumber={index + 1}
+                answer={answers[question.id]}
+                onAnswerChange={(answer) =>
+                  handleAnswerChange(question.id, answer)
+                }
+                error={errors[question.id]}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div
           style={{
-            width: "100%",
-            padding: "18px 32px",
-            backgroundColor: submitting ? "#93c5fd" : "#2563eb",
-            color: "white",
-            fontSize: "16px",
-            fontWeight: 600,
-            borderRadius: "12px",
-            border: "none",
-            cursor: submitting ? "not-allowed" : "pointer",
-            transition: "all 0.2s ease",
-            boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "10px",
-          }}
-          onMouseEnter={(e) => {
-            if (!submitting) {
-              e.currentTarget.style.backgroundColor = "#1d4ed8";
-              e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.boxShadow =
-                "0 6px 20px rgba(37, 99, 235, 0.4)";
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!submitting) {
-              e.currentTarget.style.backgroundColor = "#2563eb";
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow =
-                "0 4px 14px rgba(37, 99, 235, 0.3)";
-            }
+            marginTop: "32px",
+            paddingBottom: "40px",
           }}
         >
-          {submitting ? (
-            <>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                style={{ animation: "spin 1s linear infinite" }}
-              >
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeOpacity="0.3"
-                />
-                <path
-                  d="M12 2a10 10 0 0 1 10 10"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-              </svg>
-              Submitting...
-            </>
-          ) : (
-            <>
+          {Object.keys(errors).length > 0 && (
+            <div
+              style={{
+                backgroundColor: "#fef2f2",
+                borderRadius: "12px",
+                padding: "16px 20px",
+                marginBottom: "20px",
+                border: "1px solid #fecaca",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+              }}
+            >
               <svg
                 width="20"
                 height="20"
                 fill="none"
-                stroke="currentColor"
+                stroke="#dc2626"
                 viewBox="0 0 24 24"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="M5 13l4 4L19 7"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              Submit Answers
-            </>
+              <p style={{ color: "#dc2626", fontSize: "14px", margin: 0 }}>
+                Please answer all required questions before submitting.
+              </p>
+            </div>
           )}
-        </button>
+
+          <button
+            onClick={handleSubmit}
+            disabled={submitting}
+            style={{
+              width: "100%",
+              padding: "18px 32px",
+              backgroundColor: submitting ? "#93c5fd" : "#2563eb",
+              color: "white",
+              fontSize: "16px",
+              fontWeight: 600,
+              borderRadius: "12px",
+              border: "none",
+              cursor: submitting ? "not-allowed" : "pointer",
+              transition: "all 0.2s ease",
+              boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+            }}
+            onMouseEnter={(e) => {
+              if (!submitting) {
+                e.currentTarget.style.backgroundColor = "#1d4ed8";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow =
+                  "0 6px 20px rgba(37, 99, 235, 0.4)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!submitting) {
+                e.currentTarget.style.backgroundColor = "#2563eb";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 14px rgba(37, 99, 235, 0.3)";
+              }
+            }}
+          >
+            {submitting ? (
+              <>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  style={{ animation: "spin 1s linear infinite" }}
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeOpacity="0.3"
+                  />
+                  <path
+                    d="M12 2a10 10 0 0 1 10 10"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                Submitting...
+              </>
+            ) : (
+              <>
+                <svg
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Submit Answers
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       <style jsx global>{`
