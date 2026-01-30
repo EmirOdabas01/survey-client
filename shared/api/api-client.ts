@@ -108,6 +108,19 @@ class ApiClient {
     return accessToken;
   }
 
+  private extractErrorMessage(errorData: any, fallback: string): string {
+    if (errorData.Message) {
+      return errorData.Message;
+    }
+    if (errorData.message) {
+      return errorData.message;
+    }
+    if (errorData.Title) {
+      return errorData.Title;
+    }
+    return fallback;
+  }
+
   async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
 
@@ -147,7 +160,7 @@ class ApiClient {
           throw new ApiValidationError(errorData as ValidationErrors);
         }
 
-        throw new Error(errorData.message || "Bad request");
+        throw new Error(this.extractErrorMessage(errorData, "Bad request"));
       }
 
       if (response.status === 401 && !this.isRefreshing) {
@@ -164,8 +177,10 @@ class ApiClient {
           });
 
           if (!retryResponse.ok) {
-            const error = await retryResponse.json();
-            throw new Error(error.message || "Request failed");
+            const errorData = await retryResponse.json();
+            throw new Error(
+              this.extractErrorMessage(errorData, "Request failed"),
+            );
           }
 
           return await retryResponse.json();
@@ -176,8 +191,8 @@ class ApiClient {
       }
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Request failed");
+        const errorData = await response.json();
+        throw new Error(this.extractErrorMessage(errorData, "Request failed"));
       }
 
       const text = await response.text();
